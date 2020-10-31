@@ -4,20 +4,14 @@ module Launch::Environment
   describe Loader do
     Dir.cd CURRENT_DIR
 
-    it "raises error for non existent environment settings" do
-      expect_raises Launch::Exceptions::Environment do
-        Loader.new("unknown", "./spec/support/config/").settings
+    it "raises error for non existent credentials file" do
+      expect_raises Launch::Exceptions::Credentials do
+        Loader.new.credentials
       end
     end
 
     it "load settings from YAML file" do
-      environment = Loader.new("fake_env", "./spec/support/config/")
-      environment.settings.should be_a Launch::Environment::Settings
-    end
-
-    it "loads encrypted YAML settings" do
-      environment = Loader.new("production", "./spec/support/config/")
-      environment.settings.should be_a Launch::Environment::Settings
+      Loader.new("./spec/support/config/credentials.yml.enc").credentials["secret_key_base"].should eq SECRET_KEY
     end
   end
 end

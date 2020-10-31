@@ -18,7 +18,7 @@ module Launch::Environment
       io << @env
     end
 
-    def ==(env2 : String)
+    def ==(env2 : String | Symbol)
       @env == env2.to_s.downcase
     end
 

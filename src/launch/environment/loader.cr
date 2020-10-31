@@ -2,30 +2,20 @@ require "ecr/macros"
 
 module Launch::Environment
   class Loader
-    def initialize(
-      @environment : String = Launch.env.to_s,
-      @path : String = Launch.environment_path
-    )
-    end
+    @path : String
 
-    def settings : Settings
-      environment_files = Hash(String, String).new
-      {{ run("./file_loader", "/config/environments") }}
-      Settings.from_yaml(environment_files[@environment])
-    rescue e : KeyError
-      raise Exceptions::Environment.new(@environment)
+    def initialize(path = "./config/credentials.yml.enc")
+      @path = path
     end
 
     def credentials : YAML::Any
       YAML.parse(Support::FileEncryptor.read_as_string(credentials_settings_file))
-    rescue e : Exception
-      puts e
-      # TODO
-      raise "No credentials.yml.enc file"
+    rescue e : File::NotFoundError
+      raise Exceptions::Credentials.new
     end
 
     private def credentials_settings_file : String
-      @credentials ||= File.expand_path("./config/credentials.yml.enc")
+      @credentials ||= File.expand_path(@path)
     end
   end
 end

@@ -2,24 +2,26 @@ require "../../spec_helper"
 
 module Launch::Environment
   describe Settings do
-    Dir.cd CURRENT_DIR
+    Spec.after_each do
+      Launch::Server.configure do |settings|
+        settings.port = 3001
+        settings.name = "Launch_App"
+      end
+    end
 
-    it "loads default environment settings from yaml file" do
-      test_yaml = File.read(File.expand_path("./spec/support/config/test.yml"))
-      settings = Launch::Settings.from_yaml(test_yaml)
+    it "loads default environment settings" do
+      settings = Launch::Environment::Settings.new
 
-      settings.logging.severity.should eq Log::Severity::Warn
+      settings.logging.severity.should eq Log::Severity::Debug
       settings.logging.colorize.should eq true
-      settings.database_url.should eq "mysql://root@localhost:3306/test_settings_test"
+      settings.database_url.should eq ""
       settings.host.should eq "0.0.0.0"
-      settings.name.should eq "test_settings"
-      settings.port.should eq 3000
+      settings.name.should eq "Launch_App"
+      settings.port.should eq 3001
       settings.port_reuse.should eq true
       settings.process_count.should eq 1
       settings.redis_url.should eq "redis://localhost:6379"
       settings.secret_key_base.should_not be_nil
-      settings.secrets.should eq({"description" => "Store your test secrets credentials and settings here."})
-      settings.secrets.is_a?(Hash(String, String)?).should be_true
       settings.session.should eq({
         :key => "launch.session", :store => :signed_cookie, :expires => 0,
       })
@@ -27,24 +29,14 @@ module Launch::Environment
       settings.ssl_cert_file.should be_nil
     end
 
-    it "loads logging color setting from yaml file" do
-      color_yaml = File.read(File.expand_path("./spec/support/config/test_with_color.yml"))
-      settings = Launch::Settings.from_yaml(color_yaml)
-      settings.logging.color.should eq :red
-    end
-
-    describe "#static_file_server" do
-      it "sets default headers value as empty map" do
-        test_yaml = File.read(File.expand_path("./spec/support/config/development.yml"))
-        settings = Launch::Settings.from_yaml(test_yaml)
-        settings.pipes.dig?("static", "headers").should eq({} of String => Launch::Settings::SettingValue)
+    it "defaults can be overwritten" do
+      Launch::Server.configure do |settings|
+        settings.port = 8080
+        settings.name = "test_app"
       end
 
-      it "sets header file settings from environment yaml file" do
-        test_yaml = File.read(File.expand_path("./spec/support/config/with_static_pipe_settings.yml"))
-        settings = Launch::Settings.from_yaml(test_yaml)
-        settings.pipes.dig?("static", "headers").should eq({"Cache-Control" => "private, max-age=7200"})
-      end
+      Launch.settings.port.should eq 8080
+      Launch.settings.name.should eq "test_app"
     end
   end
 end
