@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-const Navbar = (): Jsx.Element => (
+const Navbar = () => (
   <nav>
     <Link href="/">Home</Link>
   </nav>

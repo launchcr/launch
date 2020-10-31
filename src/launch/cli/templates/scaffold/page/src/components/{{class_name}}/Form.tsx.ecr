@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import <%= class_name %>, { <%= class_name %>Response } from '../../types/<%= class_name %>';
 
-const <%= class_name %>Form = ({ <%= @name %> }: { <%= @name %>: <%= class_name %> }) => {
+const <%= class_name %>Form = ({ <%= @name %> }: { <%= @name %>?: <%= class_name %> }) => {
 <% @fields.reject{ |f| f.hidden }.each do |field| -%>
   const [<%= field.name %>, set<%= field.name.capitalize %>] = useState(<%= @name %>.<%= field.name %>);
 <% end -%>

@@ -55,11 +55,11 @@ const <%= class_name %>Index = ({ all<%= name_plural.capitalize %> }: { all<%= n
           <tbody>
 
             {<%= name_plural %> && <%= name_plural %>.map((<%= @name %>) => (
-              <tr>
+              <td key={pet.id}>
 <% @fields.reject{ |f| f.hidden }.each do |field| -%>
                 <td>{<%= @name %>.<%= field.name %>}<% if field.reference? %>.id<% end %></td>
 <% end -%>
-                <td key={<%= @name %>.id}>
+                <td>
                   <span>
                     <Link href={`/<%= name_plural %>/${<%= @name %>.id}`}>
                       <a className="btn btn-info btn-sm">Show</a>
