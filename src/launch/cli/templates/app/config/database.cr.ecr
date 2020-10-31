@@ -1,0 +1,13 @@
+require "ecr/macros"
+require "log"
+require "jennifer"
+require "launch/extensions/jennifer"
+require "jennifer_sqlite3_adapter"
+# require "jennifer/adapter/postgres" # for PostgreSQL
+# require "jennifer/adapter/mysql" for MySQL
+
+Jennifer::Config.parse(ECR.render("config/database.yml"), ENV["LAUNCH_ENV"]? || "development")
+
+Jennifer::Config.configure do |conf|
+  conf.logger.level = ENV["LAUNCH_ENV"]? == "development" ? Log::Severity::Debug : Log::Severity::Error
+end

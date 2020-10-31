@@ -1,0 +1,95 @@
+import React, { useState } from 'react';
+import Link from 'next/link';
+import axios from 'axios';
+
+import <%= class_name %>, { <%= class_name %>Response } from '../../types/<%= class_name %>';
+
+const <%= class_name %>Form = ({ <%= @name %> }: { <%= @name %>: <%= class_name %> }) => {
+<% @fields.reject{ |f| f.hidden }.each do |field| -%>
+  const [<%= field.name %>, set<%= field.name.capitalize %>] = useState(<%= @name %>.<%= field.name %>);
+<% end -%>
+
+  const handleMessage = (res: <%= class_name %>Response) => {
+    console.log(res);
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    const data = {
+      <%= @name %>,
+    };
+
+<% @fields.reject{ |f| f.hidden }.each do |field| -%>
+    data.<%= @name %>.<%= field.name %> = <%= field.name %>;
+<% end -%>
+
+    if (<%= @name %>.id) {
+      axios.patch(
+        `http://localhost:3001/<%= name_plural %>/${<%= @name %>.id}`,
+        data.<%= @name %>,
+      ).then((res: <%= class_name %>Response) => handleMessage(res));
+    } else {
+      axios.post(
+        'http://localhost:3001/<%= name_plural %>',
+        data.<%= @name %>,
+      ).then((res: <%= class_name %>Response) => handleMessage(res));
+    }
+  };
+
+  return (
+    <>
+      {
+        <%= @name %> && <%= @name %>.errors ? (
+          <ul className="errors">
+            {<%= @name %>.errors.map((error) => (
+              <li>{error}</li>
+            ))}
+          </ul>
+        ) : undefined
+      }
+
+      <form onSubmit={(e) => handleSubmit(e)}>
+<% @fields.reject{ |f| f.hidden }.each do |field| -%>
+        <div className="form-group">
+<% case field.type
+   when "text" -%>
+          <textarea
+            name="<%= field.name %>"
+            content={<%= @name %>.<%= field.name %>}
+            placeholder="<%= field.name.capitalize %>"
+            className="form-control"
+            size="30x10"
+          />
+<% when "boolean" -%>
+          <label><%= field.name %></label>
+          <input
+            name="<%= field.name %>"
+            type="checkbox"
+            checked={String(<%= @name %>.<%= field.name %>) === "1"}
+            placeholder="<%= field.name.capitalize %>"
+            className="form-control"
+          />
+<% when "reference" -%>
+          <%="<" %>%= label(<%=":#{field.name}"%>) -%>
+          <%="<"%>%= select_field(name: "<%= field.name %>_id", collection: <% if config.model == "crecto" %>Repo.all(<%= field.class_name %>)<% else %><%= field.class_name %>.all<% end %>.map{|<%= field.name %>| [<%= field.name %>.id, <%= field.name %>.id]}, selected: <%= @name %>.<%= field.name %>_id, class: "form-control") -%>
+<% else -%>
+          <input
+            name="<%= field.name %>"
+            value={<%= field.name %> || ''}
+            placeholder="<%= field.name.capitalize %>"
+            className="form-control"
+            onChange={(e) => set<%= field.name.capitalize %>(e.target.value)}
+          />
+<% end -%>
+        </div>
+<% end -%>
+        <input type="submit" value="Submit" className="btn btn-success btn-sm" />
+        <Link href="/<%= name_plural %>">
+          <a className="btn btn-light btn-sm">Back</a>
+        </Link>
+      </form>
+    </>
+  );
+};
+
+export default <%= class_name %>Form;

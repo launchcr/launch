@@ -1,0 +1,18 @@
+class <%= class_name %> < Jennifer::Model::Base
+  include JSON::Serializable
+
+  def initialize; end
+
+  with_timestamps
+  mapping(
+    id: Primary32,
+<% @fields.reject{ |f| f.hidden || f.reference? }.each do |field| -%>
+    <%= field.name %>: {type: <%= field.cr_type %>?},
+<% end -%>
+    created_at: {type: Time?},
+    updated_at: {type: Time?}
+  )
+<% @fields.select{|f| f.reference? }.each do |field| %>
+  belongs_to :<%= field.name %>
+<% end -%>
+end

@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   db:
     image: postgres:10.2
@@ -11,11 +11,11 @@ services:
     command: redis-server
   spec:
     build: .
-    working_dir: /opt/amber
+    working_dir: /opt/launch
     environment:
-      DATABASE_URL: 'postgres://postgres:password@db:5432/test_app'
-      REDIS_URL: 'redis://redis:6379'
-      AMBER_ENV: test
+      DATABASE_URL: "postgres://postgres:password@db:5432/test_app"
+      REDIS_URL: "redis://redis:6379"
+      LAUNCH_ENV: test
       CI: "true"
     depends_on:
       - redis

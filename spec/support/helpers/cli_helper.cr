@@ -16,14 +16,21 @@ end
 module CLIHelper
   BASE_ENV_PATH       = "./config/environments/"
   ENV_CONFIG_PATH     = "#{TESTING_APP}/config/environments/"
-  CURRENT_ENVIRONMENT = ENV["AMBER_ENV"] ||= "test"
+  CURRENT_ENVIRONMENT = ENV["LAUNCH_ENV"] ||= "test"
   ENVIRONMENTS        = %w(development test)
+  DATABASE_PATH       = "#{TESTING_APP}/config/"
 
   def cleanup
     Dir.cd CURRENT_DIR
     if Dir.exists?(TESTING_APP)
       FileUtils.rm_rf(TESTING_APP)
     end
+  end
+
+  def prepare_test_app_with_deps
+    cleanup
+    scaffold_app_with_deps(TESTING_APP, "-d", "sqlite")
+    environment_yml(CURRENT_ENVIRONMENT, "#{Dir.current}/config/environments/")
   end
 
   def prepare_test_app
@@ -61,8 +68,8 @@ module CLIHelper
     YAML.parse(File.read(path))
   end
 
-  def amber_yml(path = TESTING_APP)
-    YAML.parse(File.read("#{path}/.amber.yml"))
+  def launch_yml(path = TESTING_APP)
+    YAML.parse(File.read("#{path}/.launch.yml"))
   end
 
   def shard_yml(path = TESTING_APP)
@@ -71,6 +78,10 @@ module CLIHelper
 
   def environment_yml(environment : String, path = ENV_CONFIG_PATH)
     YAML.parse(File.read("#{path}#{environment}.yml"))
+  end
+
+  def database_yml(environment : String, path = DATABASE_PATH)
+    YAML.parse(File.read("#{path}database.yml"))[environment]
   end
 
   def development_yml
@@ -92,7 +103,7 @@ module CLIHelper
   def prepare_yaml(path)
     if File.exists?("#{path}/shard.yml")
       shard = File.read("#{path}/shard.yml")
-      shard = shard.gsub(/github\:\samberframework\/amber\n.*(?=\n)/, "path: ../../../amber")
+      shard = shard.gsub(/github\:\slaunchframework\/launch\n.*(?=\n)/, "path: ../../../launch")
       File.write("#{path}/shard.yml", shard)
     end
   end
@@ -104,13 +115,19 @@ module CLIHelper
   end
 
   def recipe_app(app_name, *options)
-    Amber::CLI::MainCommand.run ["new", app_name, "-y"] | options.to_a
+    Launch::CLI::MainCommand.run ["new", app_name, "-y"] | options.to_a
     Dir.cd(app_name)
     prepare_yaml(Dir.current)
   end
 
   def scaffold_app(app_name, *options)
-    Amber::CLI::MainCommand.run ["new", app_name, "-y", "--no-deps"] | options.to_a
+    Launch::CLI::MainCommand.run ["new", app_name, "-y", "--no-deps"] | options.to_a
+    Dir.cd(app_name)
+    prepare_yaml(Dir.current)
+  end
+
+  def scaffold_app_with_deps(app_name, *options)
+    Launch::CLI::MainCommand.run ["new", app_name, "-y", ""] | options.to_a
     Dir.cd(app_name)
     prepare_yaml(Dir.current)
   end

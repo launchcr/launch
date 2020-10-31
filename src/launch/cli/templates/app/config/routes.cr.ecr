@@ -1,0 +1,13 @@
+Launch::Server.configure do
+  pipeline :api do
+    # plug Launch::Pipe::PoweredByLaunch.new
+    plug Launch::Pipe::Error.new
+    plug Launch::Pipe::Logger.new
+    plug Launch::Pipe::Session.new
+    plug Launch::Pipe::CORS.new
+  end
+
+  routes :api do
+    get "/", HomeController, :index
+  end
+end

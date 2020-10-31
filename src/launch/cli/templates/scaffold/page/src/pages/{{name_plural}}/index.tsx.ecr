@@ -1,0 +1,101 @@
+import React, { useState } from 'react';
+import Link from 'next/link';
+import axios from 'axios';
+
+import <%= class_name %>, { <%= name_plural.capitalize %>Response } from '../../types/<%= class_name %>';
+
+const <%= class_name %>Index = ({ all<%= name_plural.capitalize %> }: { all<%= name_plural.capitalize %>: <%= class_name %>[] }) => {
+  const [<%= name_plural %>, set<%= name_plural.capitalize %>] = useState(all<%= name_plural.capitalize %>);
+
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!(e.target instanceof HTMLButtonElement)) {
+      return;
+    }
+    const { id } = e.target.dataset;
+
+    axios.delete(
+      `http://localhost:3001/<%= name_plural %>/${id}`,
+      { data: {} },
+    ).then((res: <%= name_plural.capitalize %>Response) => {
+      if (res.status === 204) {
+        set<%= name_plural.capitalize %>(
+          <%= name_plural %>.filter((<%= @name %>) => <%= @name %>.id !== +id),
+        );
+        alert('<%= class_name %> has been deleted');
+      } else {
+        alert('Some error has occurred.');
+      }
+    });
+  };
+
+  return (
+    <>
+      <div className="row">
+        <div className="col-sm-11">
+          <h2><%= display_name_plural %></h2>
+        </div>
+        <div className="col-sm-1">
+          <Link href="/<%= name_plural %>/new">
+            <a className="btn btn-success btn-sm">New</a>
+          </Link>
+        </div>
+      </div>
+
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+<% @fields.reject{ |f| f.hidden }.each do |field| -%>
+              <th><%= field.name.capitalize %></th>
+<% end -%>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {<%= name_plural %> && <%= name_plural %>.map((<%= @name %>) => (
+              <tr>
+<% @fields.reject{ |f| f.hidden }.each do |field| -%>
+                <td>{<%= @name %>.<%= field.name %>}<% if field.reference? %>.id<% end %></td>
+<% end -%>
+                <td key={<%= @name %>.id}>
+                  <span>
+                    <Link href={`/<%= name_plural %>/${<%= @name %>.id}`}>
+                      <a className="btn btn-info btn-sm">Show</a>
+                    </Link>
+                    <Link href={`/<%= name_plural %>/${<%= @name %>.id}/edit`}>
+                      <a className="btn btn-success btn-sm">Edit</a>
+                    </Link>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={(e) => handleDelete(e)}
+                      data-id={<%= @name %>.id}
+                      type="button"
+                    >
+                      Delete
+                    </button>
+                  </span>
+                </td>
+              </tr>
+            ))}
+
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+};
+
+export default <%= class_name %>Index;
+
+export async function getServerSideProps() {
+  const props = { all<%= name_plural.capitalize %>: {} };
+  await axios.get('http://localhost:3001/<%= name_plural %>')
+    .then((res: <%= name_plural.capitalize %>Response) => {
+      props.all<%= name_plural.capitalize %> = res.data;
+    });
+  return {
+    props,
+  };
+}

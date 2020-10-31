@@ -1,0 +1,28 @@
+# About Application.cr File
+#
+# This is Launch application main entry point. This file is responsible for loading
+# initializers, classes, and all application related code in order to have
+# Launch::Server boot up.
+#
+# > We recommend not modifying the order of the requires since the order will
+# affect the behavior of the application.
+require "launch"
+
+require "./database"
+require "../db/migrations/*"
+
+require "./settings"
+require "./logger"
+require "./i18n"
+require "./initializers/**"
+
+# uncomment this line to enable plugins
+# require "../src/plugins/**"
+
+# Start Generator Dependencies: Don't modify.
+require "../src/models/**"
+# End Generator Dependencies
+
+require "../src/controllers/application_controller"
+require "../src/controllers/**"
+require "./routes"

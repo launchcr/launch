@@ -1,0 +1,52 @@
+name: <%= @name %>
+version: 0.1.0
+
+authors:
+  - <%= @author %> <<%= @email %>>
+
+crystal: <%= Crystal::VERSION %>
+
+license: UNLICENSED
+
+targets:
+  <%= @name %>:
+    main: src/<%= @name %>.cr
+
+  launch:
+    main: lib/launch/src/launch/cli.cr
+
+dependencies:
+  launch:
+    github: launchcr/launch
+    version: <%= Launch::VERSION %>
+    branch: launchcr
+
+  jennifer:
+    github: imdrasil/jennifer.cr
+    branch: master
+
+  sam:
+    github: imdrasil/sam.cr
+
+  quartz_mailer:
+    github: amberframework/quartz-mailer
+    version: ~> 0.7.0
+
+  jasper_helpers:
+    github: amberframework/jasper-helpers
+    version: ~> 0.2.5
+
+<% if @database == "sqlite" -%>
+  jennifer_sqlite3_adapter:
+    github: imdrasil/jennifer_sqlite3_adapter
+    version: 0.3.0
+<% end -%>
+
+  citrine-i18n:
+    github: amberframework/citrine-i18n
+    version: ~> 0.4.0
+
+development_dependencies:
+  ameba:
+    github: veelenga/ameba
+    version: ~> 0.13.1

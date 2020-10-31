@@ -3,11 +3,11 @@ require "./support/helpers/cli_helper"
 
 include CLIHelper
 
-module Amber::CLI
+module Launch::CLI
   extend self
 
   def generate_app(*options)
-    ENV["AMBER_ENV"] = "test"
+    ENV["LAUNCH_ENV"] = "test"
 
     cleanup
     scaffold_app(TESTING_APP, *options)
@@ -31,7 +31,7 @@ module Amber::CLI
     MainCommand.run ["generate", "controller", "-y", "MyController", "myview"]
 
     prepare_yaml(Dir.current)
-    Amber::CLI.env = "test"
+    Launch::CLI.env = "test"
     MainCommand.run ["db", "drop", "create", "migrate"]
   end
 end
