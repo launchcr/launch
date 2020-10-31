@@ -1,4 +1,5 @@
 import React from 'react';
+import { NextPageContext } from 'next';
 import axios from 'axios';
 
 import <%= class_name %>Form from '../../../components/<%= class_name %>/Form';
@@ -13,7 +14,7 @@ const <%= class_name %>Edit = ({ <%= @name %> }: { <%= @name %>: <%= class_name 
 
 export default <%= class_name %>Edit;
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: NextPageContext) {
   const props = { <%= @name %>: {} };
   await axios.get(`http://localhost:3001/<%= name_plural %>/${context.query.id}`)
     .then((res: <%= class_name %>Response) => {

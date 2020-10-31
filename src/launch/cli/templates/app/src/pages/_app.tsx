@@ -1,8 +1,9 @@
 import React from 'react';
+import { AppProps } from 'next/app'
 import Navbar from '../components/Shared/Navbar';
 import '../assets/styles/globals.scss';
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Navbar />
