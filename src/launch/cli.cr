@@ -4,16 +4,10 @@ require "./version"
 require "./exceptions/*"
 require "./environment"
 require "./cli/commands"
+require "./logger/formatter"
 
-backend = Log::IOBackend.new
-backend.formatter = Log::Formatter.new do |entry, io|
-  io << entry.timestamp.to_s("%I:%M:%S")
-  io << " "
-  io << entry.source
-  io << " (#{entry.severity})" if entry.severity > Log::Severity::Debug
-  io << " "
-  io << entry.message
-end
-Log.builder.bind "*", :info, backend
+backend = Log::IOBackend.new(STDOUT)
+backend.formatter = Launch::Logger::Formatter.proc
+Log.dexter.configure(:info, backend)
 
 Launch::CLI::MainCommand.run ARGV

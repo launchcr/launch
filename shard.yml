@@ -26,6 +26,10 @@ dependencies:
     github: elorest/compiled_license
     version: ~> 0.1.3
 
+  dexter:
+    github: luckyframework/dexter
+    version: ~> 0.3
+
   kilt:
     github: jeromegn/kilt
     version: ~> 0.6.0

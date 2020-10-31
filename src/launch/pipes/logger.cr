@@ -11,12 +11,12 @@ module Launch
         time = Time.utc
         call_next(context)
         status = context.response.status_code
-        elapsed = elapsed_text(Time.utc - time)
+        elapsed = elapsed(Time.utc - time)
         request(context, time, elapsed, status, :magenta)
-        log_other(context.request.headers, "headers")
-        log_other(context.request.cookies, "cookies", :light_blue)
-        log_other(context.params, "params", :light_blue)
-        log_other(context.session, "session", :light_yellow)
+        log_other(context.request.headers, "Headers")
+        log_other(context.request.cookies, "Cookies", :light_blue)
+        log_other(context.params, "Params", :light_blue)
+        log_other(context.session, "Session", :light_yellow)
         context
       end
 
@@ -25,10 +25,10 @@ module Launch
           str << "Status: #{http_status(status)} Method: #{method(context)}"
           str << " Pipeline: #{context.valve.colorize(color)} Format: #{context.format.colorize(color)}"
         end
-        log "Started #{time.colorize(color)}", "request", color
+        log "Started #{time.colorize(color)}", "Request", color
         log msg, "Request", color
-        log "Requested Url: #{context.requested_url.colorize(color)}", "request", color
-        log "Time Elapsed: #{elapsed.colorize(color)}", "request", color
+        log "Requested Url: #{context.requested_url.colorize(color)}", "Request", color
+        log "Time Elapsed: #{elapsed.colorize(color)}", "Request", color
       end
 
       private def log_other(other, name, color = :light_cyan)
@@ -47,24 +47,15 @@ module Launch
       end
 
       private def http_status(status)
-        case status
-        when 200..299 then status.colorize(:green)
-        when 300..399 then status.colorize(:blue)
-        when 400..499 then status.colorize(:yellow)
-        when 500..599 then status.colorize(:red)
-        else
-          status.colorize(:white)
-        end
+        Launch::Logger::Helpers.colored_http_status(status)
       end
 
-      private def elapsed_text(elapsed)
-        millis = elapsed.total_milliseconds
-        return "#{millis.round(2)}ms" if millis >= 1
-        "#{(millis * 1000).round(2)}µs"
+      def elapsed(elapsed : Time::Span)
+        Launch::Logger::Helpers.elapsed_text(elapsed)
       end
 
       private def log(msg, prog, color = :white)
-        Log.for(prog).debug { "#{prog.colorize(color)} | #{msg}" }
+        Log.for(prog).debug { "#{prog.colorize(color)} - #{msg}" }
       end
 
       private def log_config

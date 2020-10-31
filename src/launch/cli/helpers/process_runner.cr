@@ -2,7 +2,7 @@ require "./helpers"
 
 module Sentry
   class ProcessRunner
-    Log = ::Log.for("watch")
+    # Log = ::Log.for("Watch")
 
     property processes = Hash(String, Array(Process)).new
     property process_name : String
@@ -128,7 +128,7 @@ module Sentry
             build_result = Launch::CLI::Helpers.run(build_command_run)
             exit 1 unless build_result.is_a? Process::Status
             if build_result.success?
-              log :run, "Compiled in #{(Time.monotonic - time)}"
+              log :run, "Compiled in #{elapsed(Time.monotonic - time)}"
               stop_processes("run") if @app_running
               ok_to_run = true
             elsif !@app_running # first run
@@ -198,7 +198,11 @@ module Sentry
     end
 
     private def log(task, msg, color = :light_gray)
-      Log.for(task.to_s).info { msg.colorize(color) }
+      Log.info { "#{task.to_s.capitalize.colorize(:green)} - #{msg}" }
+    end
+
+    def elapsed(elapsed : Time::Span)
+      Launch::Logger::Helpers.elapsed_text(elapsed)
     end
   end
 end
