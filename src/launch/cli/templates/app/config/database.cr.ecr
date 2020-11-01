@@ -8,6 +8,7 @@ if Launch.settings.database_url
 else
   Jennifer::Config.configure do |conf|
     conf.host = Launch.settings.host == "0.0.0.0" ? "<%= @database == "sqlite3" ? "." : "localhost" %>" : Launch.settings.host
+    conf.host = Launch.settings.database_host
     conf.user = ""
     conf.password = ""
     conf.adapter = <%= @database %>
