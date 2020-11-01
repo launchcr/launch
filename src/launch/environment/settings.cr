@@ -8,12 +8,20 @@ module Launch::Environment
 
     @smtp_settings : SMTPSettings?
 
-    getter database_url : String = ""
     getter host : String = "0.0.0.0"
-    getter redis_url : String = "redis://localhost:6379"
     getter secret_key_base : String = Random::Secure.urlsafe_base64(32)
     getter ssl_key_file : String? = nil
     getter ssl_cert_file : String? = nil
+
+    getter database_url : String? = nil
+    getter database_host : String = "."
+    getter database_user : String = ""
+    getter database_password : String = ""
+    getter database_adapter : String = "sqlite3"
+    getter migration_type : String = "crystal"
+    getter migration_file_path : String = "db/migrations"
+
+    getter redis_url : String = "redis://localhost:6379"
 
     setter session : Hash(String, Int32 | String)
     setter smtp : Hash(String, SettingValue)
@@ -93,10 +101,6 @@ module Launch::Environment
       @host = host.to_s
     end
 
-    def redis_url=(redis_url : CredentialsType)
-      @redis_url = redis_url.to_s
-    end
-
     def ssl_key_file=(ssl_key_file : CredentialsType?)
       @ssl_key_file = (ssl_key_file ? ssl_key_file.to_s : nil)
     end
@@ -105,8 +109,36 @@ module Launch::Environment
       @ssl_cert_file = (ssl_cert_file ? ssl_cert_file.to_s : nil)
     end
 
-    def database_url=(database_url : CredentialsType)
+    def database_url=(database_url : CredentialsType?)
       @database_url = database_url.to_s
+    end
+
+    def database_host=(database_host : CredentialsType)
+      @database_host = database_host.to_s
+    end
+
+    def database_user=(database_user : CredentialsType)
+      @database_user = database_user.to_s
+    end
+
+    def database_password=(database_password : CredentialsType)
+      @database_password = database_password.to_s
+    end
+
+    def database_adapter=(database_adapter : CredentialsType)
+      @database_adapter = database_adapter.to_s
+    end
+
+    def migration_type=(migration_type : CredentialsType)
+      @migration_type = migration_type.to_s
+    end
+
+    def database_host=(database_host : CredentialsType)
+      @migration_file_path = migration_file_path.to_s
+    end
+
+    def redis_url=(redis_url : CredentialsType)
+      @redis_url = redis_url.to_s
     end
   end
 end

@@ -3,12 +3,16 @@ require "jennifer_sqlite3_adapter"
 # require "jennifer/adapter/postgres" # for PostgreSQL
 # require "jennifer/adapter/mysql" for MySQL
 
-Jennifer::Config.configure do |conf|
-  conf.host = Launch.settings.host
-  conf.user = ""
-  conf.password = ""
-  conf.adapter = "sqlite3"
-  conf.db = "crystal"
-  conf.migration_files_path = "db/migrations"
-  conf.logger.level = Launch.settings.logging.severity
+if Launch.settings.database_url
+  Jennifer::Config.from_uri Launch.settings.database_url
+else
+  Jennifer::Config.configure do |conf|
+    conf.host = Launch.settings.host == "0.0.0.0" ? "<%= @database == "sqlite3" ? "." : "localhost" %>" : Launch.settings.host
+    conf.user = ""
+    conf.password = ""
+    conf.adapter = <%= @database %>
+    conf.db = "crystal"
+    conf.migration_files_path = "db/migrations"
+    conf.logger.level = Launch.settings.logging.severity
+  end
 end
