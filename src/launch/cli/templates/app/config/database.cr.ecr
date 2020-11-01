@@ -7,13 +7,11 @@ if Launch.settings.database_url
   Jennifer::Config.from_uri Launch.settings.database_url
 else
   Jennifer::Config.configure do |conf|
-    conf.host = Launch.settings.host == "0.0.0.0" ? "<%= @database == "sqlite3" ? "." : "localhost" %>" : Launch.settings.host
-    conf.host = Launch.settings.database_host
-    conf.user = ""
-    conf.password = ""
-    conf.adapter = <%= @database %>
-    conf.db = "crystal"
-    conf.migration_files_path = "db/migrations"
+    conf.user = Launch.settings.database_user
+    conf.password = Launch.settings.database_password
+    conf.adapter = Launch.settings.database_adapter
+    conf.db = Launch.settings.migration_type
+    conf.migration_files_path = Launch.settings.migration_file_path
     conf.logger.level = Launch.settings.logging.severity
   end
 end
