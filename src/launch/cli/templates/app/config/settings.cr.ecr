@@ -55,10 +55,10 @@ Launch::Server.configure do |settings|
     # settings below
     settings.database_url = nil
 
-    settings.database_host = <%= @database == "sqlite3" ? "." : "localhost" %>
+    settings.database_host = "<%= @database == "sqlite3" ? "." : "localhost" %>"
     settings.database_user = ""
     settings.database_password = ""
-    settings.database_adapter = <%= @database %>
+    settings.database_adapter = "<%= @database %>"
     settings.migration_type = "crystal"
     settings.migration_file_path = "db/migrations"
 
