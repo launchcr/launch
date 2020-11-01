@@ -3,6 +3,6 @@
 # Launch is using the dexter
 # You can read details here: https://github.com/luckyframework/dexter/
 
-backend = Log::IOBackend.new(STDOUT)
+backend = Log::IOBackend.new STDOUT
 backend.formatter = Launch::Logger::Formatter.proc
-Log.dexter.configure(Launch.settings.logging.severity, backend)
+Log.dexter.configure Launch.settings.logging.severity, backend
