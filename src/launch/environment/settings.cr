@@ -13,7 +13,7 @@ module Launch::Environment
     getter ssl_key_file : String? = nil
     getter ssl_cert_file : String? = nil
 
-    getter database_url : String? = nil
+    getter database_url : String = ""
     getter database_host : String = "."
     getter database_user : String = ""
     getter database_password : String = ""
@@ -133,7 +133,7 @@ module Launch::Environment
       @migration_type = migration_type.to_s
     end
 
-    def database_host=(database_host : CredentialsType)
+    def migration_file_path=(migration_file_path : CredentialsType)
       @migration_file_path = migration_file_path.to_s
     end
 

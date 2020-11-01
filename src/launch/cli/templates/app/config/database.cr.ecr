@@ -3,10 +3,11 @@ require "jennifer_sqlite3_adapter"
 # require "jennifer/adapter/postgres" # for PostgreSQL
 # require "jennifer/adapter/mysql" for MySQL
 
-if Launch.settings.database_url
+unless Launch.settings.database_url.empty?
   Jennifer::Config.from_uri Launch.settings.database_url
 else
   Jennifer::Config.configure do |conf|
+    conf.host = Launch.settings.database_host
     conf.user = Launch.settings.database_user
     conf.password = Launch.settings.database_password
     conf.adapter = Launch.settings.database_adapter

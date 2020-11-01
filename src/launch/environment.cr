@@ -6,18 +6,18 @@ require "./support/file_encryptor"
 
 module Launch::Environment
   macro included
-    @@settings : Settings = Settings.new
+    @@settings : Settings?
     @@credentials : YAML::Any?
 
-    def self.settings
-      @@settings
+    def self.settings : Settings
+      @@settings ||= Settings.new
     end
 
-    def self.credentials
+    def self.credentials : YAML::Any
       @@credentials ||= Loader.new.credentials
     end
 
-    def self.env
+    def self.env : Env
       @@env ||= Env.new
     end
   end
