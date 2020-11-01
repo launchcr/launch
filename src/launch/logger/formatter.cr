@@ -19,8 +19,9 @@ module Launch
   module Logger
     struct Formatter < Dexter::BaseFormatter
       ENTRY_FORMATTERS = [
-        RequestStartedFormatter,
-        RequestEndedFormatter,
+        # TODO: Not currently in use
+        # RequestStartedFormatter,
+        # RequestEndedFormatter,
         ExceptionFormatter,
         AnyOtherDataFormatter,
       ]

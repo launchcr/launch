@@ -1,7 +1,7 @@
 # About logger.cr File
 #
-# Launch is using the crystal standard library Log
-# You can read details here: https://crystal-lang.org/api/0.35.0/Log.html
+# Launch is using the dexter
+# You can read details here: https://github.com/luckyframework/dexter/
 
 backend = Log::IOBackend.new(STDOUT)
 backend.formatter = Launch::Logger::Formatter.proc

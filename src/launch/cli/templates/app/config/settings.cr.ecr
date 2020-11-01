@@ -22,7 +22,7 @@ Launch::Server.configure do |settings|
     # prevent tampering. Applications get Launch.secret_key
     # initialized to a random key present in `ENV["LAUNCH_SECRET_KEY"]` or
     # `.launch_secret_key` in this order.
-    settings.secret_key_base = <%= Random::Secure.urlsafe_base64(32) %>
+    settings.secret_key_base = "<%= Random::Secure.urlsafe_base64(32) %>"
 
     # Host: is the application server host address or ip address. Useful for when
     # deploying Launch to a PAAS and likely the assigned server IP is either

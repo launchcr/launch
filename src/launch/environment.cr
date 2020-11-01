@@ -14,7 +14,7 @@ module Launch::Environment
     end
 
     def self.credentials
-      @@credentials ||= Loader.new(env.to_s, path).credentials
+      @@credentials ||= Loader.new.credentials
     end
 
     def self.env

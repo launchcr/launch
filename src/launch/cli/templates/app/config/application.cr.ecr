@@ -8,11 +8,12 @@
 # affect the behavior of the application.
 require "launch"
 
+require "./settings"
+require "./logger"
+
 require "./database"
 require "../db/migrations/*"
 
-require "./settings"
-require "./logger"
 require "./i18n"
 require "./initializers/**"
 
