@@ -26,11 +26,13 @@ export async function getServerSideProps() {
       }
     })
     .catch(err => {
+      const fgRed = "\x1b[31m"
+      const reset = "\x1b[0m"
+      const bright = "\x1b[1m"
+      const bgRed = "\x1b[41m"
+      const fgWhite = "\x1b[37m"
       console.error(
-        "\n ▸ \x1b[32mAsset Server - \x1b[0m",
-        "\x1b[1m\x1b[37m\x1b[41m",
-        err.message,
-        '\x1b[0m'
+        `\n ${fgRed}▸${reset} ${bright}${bgRed}${fgWhite} ${err.message} ${reset}`,
       );
     })
   return {
