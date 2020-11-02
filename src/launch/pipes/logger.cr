@@ -1,18 +1,20 @@
 module Launch
   module Pipe
     class Logger < Base
-      def initialize(@filter : Array(String) = log_config.filter,
-                     @skip : Array(String) = log_config.skip)
+      def initialize(
+        @filter : Array(String) = log_config.filter,
+        @skip : Array(String) = log_config.skip
+      )
       end
 
-      def call(context : HTTP::Server::Context)
+      def call(context : HTTP::Server::Context) : HTTP::Server::Context
         time = Time.utc
         call_next(context)
 
         status = context.response.status_code
-        elapsed = elapsed(Time.utc - time)
+        elapsed = elapsed_text(Time.utc - time)
 
-        request(context, time, elapsed, status, :magenta)
+        request(context, time, elapsed, status)
 
         log_other(context.request.headers, "Headers")
         log_other(context.request.cookies, "Cookies", :light_blue)
@@ -21,43 +23,74 @@ module Launch
         context
       end
 
-      private def request(context, time, elapsed, status, color = :magenta)
+      private def request(
+        context : HTTP::Server::Context,
+        time : Time,
+        elapsed : String,
+        status : Int32
+      ) : Nil
         msg = String.build do |str|
-          str << "Status: #{http_status(status)} Method: #{method(context)}"
-          str << " Pipeline: #{context.valve.colorize(color)} Format: #{context.format.colorize(color)}"
+          str << "Status: #{http_status(status)} "
+          str << "Method: #{method(context)} "
+          str << "Pipeline: #{pipeline(context)} "
+          str << "Format: #{format(context)}"
         end
 
-        log "Started #{time.colorize(color)}", "Request", color
-        log msg, "Request", color
-        log "Requested Url: #{context.requested_url.colorize(color)}", "Request", color
-        log "Time Elapsed: #{elapsed.colorize(color)}", "Request", color
+        log "Started #{colorized_time(time)}", "Request"
+        log msg, "Request"
+        log "Requested Url: #{request_url(context)}", "Request"
+        log "Time Elapsed: #{colorized_elapsed(elapsed)}", "Request"
       end
 
-      private def log_other(other, name, color = :light_cyan)
+      private def log_other(other, name : String, color = :light_cyan)
         other.to_h.each do |key, val|
           next if @skip.includes? key
 
           if @filter.includes? key.to_s
-            log "#{key}: #{"FILTERED".colorize(:white).mode(:underline)}", name, color
+            log "#{key}: #{filtered}", name, color
           else
-            log "#{key}: #{val.colorize(color)}", name, color
+            log "#{key}: #{val.colorize(color).bold}", name, color
           end
         end
       end
 
-      private def method(context)
-        context.request.method.colorize(:light_red).to_s
+      private def method(context : HTTP::Server::Context) : Colorize::Object(String)
+        context.request.method.colorize(:light_red).to_s.colorize.bold
       end
 
-      private def http_status(status)
-        Launch::Logger::Helpers.colored_http_status(status)
+      private def http_status(status) : Colorize::Object(String)
+        Launch::Logger::Helpers.colored_http_status(status).colorize.bold
       end
 
-      def elapsed(elapsed : Time::Span)
+      private def pipeline(context : HTTP::Server::Context) : Colorize::Object(Symbol)
+        context.valve.colorize(:magenta).bold
+      end
+
+      private def format(context : HTTP::Server::Context) : Colorize::Object(String)
+        context.format.to_s.colorize(:magenta).bold
+      end
+
+      def elapsed_text(elapsed : Time::Span) : String
         Launch::Logger::Helpers.elapsed_text(elapsed)
       end
 
-      private def log(msg, prog, color = :white)
+      private def colorized_time(time : Time) : Colorize::Object(Time)
+        time.colorize(:magenta).bold
+      end
+
+      private def request_url(context : HTTP::Server::Context) : Colorize::Object(String)
+        context.requested_url.colorize(:magenta).bold
+      end
+
+      private def colorized_elapsed(elapsed : String) : Colorize::Object(String)
+        elapsed.colorize(:magenta).bold
+      end
+
+      private def filtered : Colorize::Object(String)
+        "FILTERED".colorize(:white).mode(:underline).bold
+      end
+
+      private def log(msg : String, prog : String, color = :magenta)
         Log.debug { "#{prog.colorize(color)} - #{msg}" }
       end
 
