@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
+import api from '../../services/Api'
 
 import <%= class_name %>, { <%= name_plural.capitalize %>Response } from '../../types/<%= class_name %>';
 
@@ -14,8 +14,8 @@ const <%= class_name %>Index = ({ all<%= name_plural.capitalize %> }: { all<%= n
     }
     const { id } = e.target.dataset;
 
-    axios.delete(
-      `http://localhost:3001/<%= name_plural %>/${id}`,
+    api.delete(
+      `/<%= name_plural %>/${id}`,
       { data: {} },
     ).then((res: <%= name_plural.capitalize %>Response) => {
       if (res.status === 204) {
@@ -55,7 +55,7 @@ const <%= class_name %>Index = ({ all<%= name_plural.capitalize %> }: { all<%= n
           <tbody>
 
             {<%= name_plural %> && <%= name_plural %>.map((<%= @name %>) => (
-              <td key={pet.id}>
+              <tr key={pet.id}>
 <% @fields.reject{ |f| f.hidden }.each do |field| -%>
                 <td>{<%= @name %>.<%= field.name %>}<% if field.reference? %>.id<% end %></td>
 <% end -%>
@@ -91,7 +91,7 @@ export default <%= class_name %>Index;
 
 export async function getServerSideProps() {
   const props = { all<%= name_plural.capitalize %>: {} };
-  await axios.get('http://localhost:3001/<%= name_plural %>')
+  await api.get('/<%= name_plural %>')
     .then((res: <%= name_plural.capitalize %>Response) => {
       props.all<%= name_plural.capitalize %> = res.data;
     });

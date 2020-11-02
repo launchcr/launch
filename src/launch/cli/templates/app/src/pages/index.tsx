@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'
+import api from '../services/Api'
 import HelloLaunch from '../components/HelloLaunch';
 import ServerResponse from '../types/ServerResponse';
 
@@ -17,23 +17,13 @@ interface HomeResponse extends ServerResponse {
 
 export async function getServerSideProps() {
   const props = { message: '' };
-  await axios.get('http://localhost:3001')
+  await api.get('/')
     .then((res: HomeResponse) => {
       if (res.status === 200) {
         props.message = res.data.message
       } else {
         props.message = 'Some error has occurred.'
       }
-    })
-    .catch(err => {
-      const fgRed = "\x1b[31m"
-      const reset = "\x1b[0m"
-      const bright = "\x1b[1m"
-      const bgRed = "\x1b[41m"
-      const fgWhite = "\x1b[37m"
-      console.error(
-        `\n ${fgRed}▸${reset} ${bright}${bgRed}${fgWhite} ${err.message} ${reset}`,
-      );
     })
   return {
     props,

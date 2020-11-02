@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
+import api from '../../services/Api'
 
 import <%= class_name %>, { <%= class_name %>Response } from '../../types/<%= class_name %>';
 
 const <%= class_name %>Form = ({ <%= @name %> }: { <%= @name %>?: <%= class_name %> }) => {
 <% @fields.reject{ |f| f.hidden }.each do |field| -%>
-  const [<%= field.name %>, set<%= field.name.capitalize %>] = useState(<%= @name %>.<%= field.name %>);
+  const [<%= field.name %>, set<%= field.name.capitalize %>] = useState(<%= @name %> ? <%= @name %>.<%= field.name %> : '');
 <% end -%>
 
   const handleMessage = (res: <%= class_name %>Response) => {
@@ -24,13 +24,13 @@ const <%= class_name %>Form = ({ <%= @name %> }: { <%= @name %>?: <%= class_name
 <% end -%>
 
     if (<%= @name %>.id) {
-      axios.patch(
-        `http://localhost:3001/<%= name_plural %>/${<%= @name %>.id}`,
+      api.patch(
+        `/<%= name_plural %>/${<%= @name %>.id}`,
         data.<%= @name %>,
       ).then((res: <%= class_name %>Response) => handleMessage(res));
     } else {
-      axios.post(
-        'http://localhost:3001/<%= name_plural %>',
+      api.post(
+        '/<%= name_plural %>',
         data.<%= @name %>,
       ).then((res: <%= class_name %>Response) => handleMessage(res));
     }

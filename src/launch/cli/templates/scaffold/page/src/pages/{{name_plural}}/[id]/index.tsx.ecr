@@ -1,7 +1,7 @@
 import React from 'react';
 import { NextPageContext } from 'next';
 import Link from 'next/link';
-import axios from 'axios';
+import api from '../../../services/Api'
 
 import <%= class_name %>, { <%= class_name %>Response } from '../../../types/<%= class_name %>';
 
@@ -11,8 +11,8 @@ const <%= class_name %>Show = ({ <%= @name %> }: { <%= @name %>: <%= class_name 
     if (!(e.target instanceof HTMLButtonElement)) {
       return;
     }
-    axios.delete(
-      `http://localhost:3001/<%= name_plural %>/${e.target.dataset.id}`,
+    api.delete(
+      `/<%= name_plural %>/${e.target.dataset.id}`,
       { data: {} },
     ).then((res: <%= class_name %>Response) => {
       // TODO: set message
@@ -54,7 +54,7 @@ export default <%= class_name %>Show;
 
 export async function getServerSideProps(context: NextPageContext) {
   const props = { <%= @name %>: {} };
-  await axios.get(`http://localhost:3001/<%= name_plural %>/${context.query.id}`)
+  await api.get(`/<%= name_plural %>/${context.query.id}`)
     .then((res: <%= class_name %>Response) => {
       // console.log(res);
       props.<%= @name %> = res.data;
