@@ -24,7 +24,17 @@ export async function getServerSideProps() {
       } else {
         props.message = 'Some error has occurred.'
       }
-    });
+    })
+    .catch(err => {
+      const fgRed = "\x1b[31m"
+      const reset = "\x1b[0m"
+      const bright = "\x1b[1m"
+      const bgRed = "\x1b[41m"
+      const fgWhite = "\x1b[37m"
+      console.error(
+        `\n ${fgRed}▸${reset} ${bright}${bgRed}${fgWhite} ${err.message} ${reset}`,
+      );
+    })
   return {
     props,
   };

@@ -1,13 +1,18 @@
-require "ecr/macros"
-require "log"
 require "jennifer"
-require "launch/extensions/jennifer"
 require "jennifer_sqlite3_adapter"
 # require "jennifer/adapter/postgres" # for PostgreSQL
 # require "jennifer/adapter/mysql" for MySQL
 
-Jennifer::Config.parse(ECR.render("config/database.yml"), ENV["LAUNCH_ENV"]? || "development")
-
-Jennifer::Config.configure do |conf|
-  conf.logger.level = ENV["LAUNCH_ENV"]? == "development" ? Log::Severity::Debug : Log::Severity::Error
+unless Launch.settings.database_url.empty?
+  Jennifer::Config.from_uri Launch.settings.database_url
+else
+  Jennifer::Config.configure do |conf|
+    conf.host = Launch.settings.database_host
+    conf.user = Launch.settings.database_user
+    conf.password = Launch.settings.database_password
+    conf.adapter = Launch.settings.database_adapter
+    conf.db = Launch.settings.database_name
+    conf.migration_files_path = Launch.settings.migration_file_path
+    conf.logger.level = Launch.settings.logging.severity
+  end
 end

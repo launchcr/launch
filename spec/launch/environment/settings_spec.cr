@@ -6,6 +6,7 @@ module Launch::Environment
       Launch::Server.configure do |settings|
         settings.port = 3001
         settings.name = "Launch_App"
+        settings.database_url = nil
       end
     end
 
@@ -33,10 +34,12 @@ module Launch::Environment
       Launch::Server.configure do |settings|
         settings.port = 8080
         settings.name = "test_app"
+        settings.database_url = "my_test_url"
       end
 
       Launch.settings.port.should eq 8080
       Launch.settings.name.should eq "test_app"
+      Launch.settings.database_url.should eq "my_test_url"
     end
   end
 end

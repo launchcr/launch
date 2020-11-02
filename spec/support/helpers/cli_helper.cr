@@ -30,13 +30,13 @@ module CLIHelper
   def prepare_test_app_with_deps
     cleanup
     scaffold_app_with_deps(TESTING_APP, "-d", "sqlite")
-    environment_yml(CURRENT_ENVIRONMENT, "#{Dir.current}/config/environments/")
+    launch_yml
   end
 
   def prepare_test_app
     cleanup
     scaffold_app(TESTING_APP, "-d", "sqlite")
-    environment_yml(CURRENT_ENVIRONMENT, "#{Dir.current}/config/environments/")
+    launch_yml
   end
 
   def dirs(for app)
@@ -69,7 +69,11 @@ module CLIHelper
   end
 
   def launch_yml(path = TESTING_APP)
-    YAML.parse(File.read("#{path}/.launch.yml"))
+    if Dir.current.includes?(path[1..-1])
+      YAML.parse(File.read("./.launch.yml"))
+    else
+      YAML.parse(File.read("#{path}/.launch.yml"))
+    end
   end
 
   def shard_yml(path = TESTING_APP)

@@ -3,12 +3,12 @@ require "./ssl"
 
 module Launch
   class Server
-    Log = ::Log.for(self)
     include Launch::DSL::Server
     alias WebSocketAdapter = WebSockets::Adapters::RedisAdapter.class | WebSockets::Adapters::MemoryAdapter.class
     property pubsub_adapter : WebSocketAdapter = WebSockets::Adapters::MemoryAdapter
     getter handler = Pipe::Pipeline.new
     getter router = Amber::Router::Router.new
+    getter time = Time.local
 
     def self.instance
       @@instance ||= new
@@ -53,8 +53,11 @@ module Launch
     end
 
     def start
-      time = Time.local
-      Log.info { "#{version.colorize(:light_cyan)} serving application \"#{settings.name.capitalize}\" at #{host_url.colorize(:light_cyan).mode(:underline)}" }
+      Log.info do
+        "#{prefix} - " +
+          "#{version} serving application " +
+          "#{settings.name.capitalize.colorize.bold} at #{host_url}"
+      end
       handler.prepare_pipelines
       server = HTTP::Server.new(handler)
 
@@ -67,29 +70,35 @@ module Launch
 
       Signal::INT.trap do
         Signal::INT.reset
-        Log.info { "Shutting down Launch" }
+        Log.info { "#{prefix} - Shutting down" }
         server.close
       end
 
       loop do
         begin
-          Log.info { "Server started in #{Launch.env.colorize(:yellow)}." }
-          Log.info { "Startup Time #{Time.local - time}".colorize(:white) }
+          Log.info do
+            "#{prefix} - " +
+              "Environment started in #{Launch.env.colorize(:yellow).bold}"
+          end
+          Log.info do
+            "#{prefix} - " +
+              "Startup Time #{start_up_time}"
+          end
           server.listen
           break
         rescue e : IO::Error
-          Log.error(exception: e) { "Restarting server..." }
+          Log.error(exception: e) { "#{prefix} - Restarting..." }
           sleep 1
         end
       end
     end
 
     def version
-      "Launch #{Launch::VERSION}"
+      "Launch #{Launch::VERSION}".colorize(:light_cyan).bold
     end
 
     def host_url
-      "#{scheme}://#{settings.host}:#{settings.port}"
+      "#{scheme}://#{settings.host}:#{settings.port}".colorize(:light_cyan).mode(:underline).bold
     end
 
     def ssl_enabled?
@@ -102,6 +111,18 @@ module Launch
 
     def settings
       Launch.settings
+    end
+
+    private def elapsed_text(elapsed : Time::Span)
+      Launch::Logger::Helpers.elapsed_text(elapsed)
+    end
+
+    private def prefix
+      "API Server".colorize(:green)
+    end
+
+    private def start_up_time
+      elapsed_text(Time.local - @time).colorize.bold
     end
   end
 end
