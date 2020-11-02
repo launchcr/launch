@@ -25,10 +25,11 @@ export async function getServerSideProps() {
         props.message = 'Some error has occurred.'
       }
     })
-    .catch((err) => {
-      console.log(
-        "\x1b[37m\x1b[41m",
-        `Asset Server - ${err.message}`,
+    .catch(err => {
+      console.error(
+        "\n ▸ \x1b[32mAsset Server - \x1b[0m",
+        "\x1b[1m\x1b[37m\x1b[41m",
+        err.message,
         '\x1b[0m'
       );
     })
