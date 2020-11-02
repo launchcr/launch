@@ -123,12 +123,15 @@ module Sentry
           if skip_build
             ok_to_run = true
           else
-            log :run, "Building..."
             time = Time.monotonic
-            build_result = Launch::CLI::Helpers.run(build_command_run)
+            build_result = Launch::CLI::Spinner.start("Building...") do
+              Launch::CLI::Helpers.run(build_command_run)
+            end
+
             exit 1 unless build_result.is_a? Process::Status
+
             if build_result.success?
-              log :run, "Compiled in #{elapsed(Time.monotonic - time)}"
+              log :run, "Compiled in #{elapsed(Time.monotonic - time).colorize.bold}"
               stop_processes("run") if @app_running
               ok_to_run = true
             elsif !@app_running # first run

@@ -24,7 +24,14 @@ export async function getServerSideProps() {
       } else {
         props.message = 'Some error has occurred.'
       }
-    });
+    })
+    .catch((err) => {
+      console.log(
+        "\x1b[37m\x1b[41m",
+        `Asset Server - ${err.message}`,
+        '\x1b[0m'
+      );
+    })
   return {
     props,
   };
