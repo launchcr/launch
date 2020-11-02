@@ -5,7 +5,7 @@
 Launch::Server.configure do |settings|
   # Name: A name that identifies this application. This is not internally
   # used by the framework.
-  settings.name = "Lt2"
+  settings.name = <%= @name %>
 
   if Launch.env == :development || Launch.env == :test
     # Colorize Logging: specifies whether or not to use ANSI color codes
