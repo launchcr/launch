@@ -16,10 +16,7 @@ module Launch
 
         request(context, time, elapsed, status)
 
-        log_other(context.request.headers, "Headers")
-        log_other(context.request.cookies, "Cookies", :light_blue)
-        log_other(context.params, "Params", :light_blue)
-        log_other(context.session, "Session", :light_yellow)
+        log_others(context)
         context
       end
 
@@ -40,6 +37,13 @@ module Launch
         log msg, "Request"
         log "Requested Url: #{request_url(context)}", "Request"
         log "Time Elapsed: #{colorized_elapsed(elapsed)}", "Request"
+      end
+
+      private def log_others(context : HTTP::Server::Context)
+        log_other(context.request.headers, "Headers")
+        log_other(context.request.cookies, "Cookies", :light_blue)
+        log_other(context.params, "Params", :light_blue)
+        log_other(context.session, "Session", :light_yellow)
       end
 
       private def log_other(other, name : String, color = :light_cyan)
