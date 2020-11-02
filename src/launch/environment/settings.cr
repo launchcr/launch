@@ -18,7 +18,7 @@ module Launch::Environment
     getter database_user : String = ""
     getter database_password : String = ""
     getter database_adapter : String = "sqlite3"
-    getter migration_type : String = "crystal"
+    getter database_name : String = "#{ENV["LAUNCH_ENV"]}_example_database"
     getter migration_file_path : String = "db/migrations"
 
     getter redis_url : String = "redis://localhost:6379"
@@ -129,8 +129,8 @@ module Launch::Environment
       @database_adapter = database_adapter.to_s
     end
 
-    def migration_type=(migration_type : CredentialsType)
-      @migration_type = migration_type.to_s
+    def database_name=(database_name : CredentialsType)
+      @database_name = database_name.to_s
     end
 
     def migration_file_path=(migration_file_path : CredentialsType)

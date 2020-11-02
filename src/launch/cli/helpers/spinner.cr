@@ -1,6 +1,6 @@
 # This code comes from LuckyFramework. Credits to Lucky team.
 # https://github.com/luckyframework/lucky_cli/blob/master/src/lucky_cli/spinner.cr
-class Launch::CLI::Spinner
+class Launch::CLI::Helpers::Spinner
   DELETE_LINE = "\33[2K\r"
 
   private property frame_index : Int32 = 0

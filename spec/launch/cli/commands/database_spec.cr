@@ -11,57 +11,58 @@ module Launch::CLI
 
     describe "sqlite" do
       context ENV["LAUNCH_ENV"] do
-        it "has connection settings in config/environments/env.yml" do
-          env_yml = prepare_test_app
-          env_yml["database_url"].should eq expected_db_url("sqlite3", env)
-          cleanup
-        end
+        # it "has connection settings in config/environments/env.yml" do
+        #   config_yml = prepare_test_app
+        #   config_yml["database"].should eq "sqlite"
+        #   cleanup
+        # end
 
-        it "does not create the database when db create" do
-          env_yml = prepare_test_app
-          db_filename = env_yml["database_url"].to_s.gsub("sqlite3:", "")
-          File.exists?(db_filename).should be_false
-          cleanup
-        end
+        # it "does not create the database when db create" do
+        #   config_yml = prepare_test_app
+        #   db_filename = "./#{TEST_APP_NAME}_development.db"
+        #   File.exists?(db_filename).should be_false
+        #   cleanup
+        # end
 
         it "creates the database when db migrate" do
           env_yml = prepare_test_app_with_deps
-          CLI.settings.database_url = env_yml["database_url"].to_s
+          # CLI.settings.database_url = env_yml["database_url"].to_s
 
           MainCommand.run ["generate", "model", "-y", "Post"]
           MainCommand.run ["db", "migrate"]
 
-          db_filename = CLI.settings.database_url.to_s.gsub("sqlite3:./db/", "./")
-          db_filename = db_filename.split(".db")[0]
+          db_filename = "./#{TEST_APP_NAME}_development_db"
+          pp Dir.current
+          pp Dir.children(Dir.current)
           File.exists?(db_filename).should be_true
           File.info(db_filename).size.should_not eq 0
-          cleanup
+          # cleanup
         end
 
-        it "deletes the database when db drop" do
-          env_yml = prepare_test_app
-          CLI.settings.database_url = env_yml["database_url"].to_s
+        # it "deletes the database when db drop" do
+        #   env_yml = prepare_test_app
+        #   CLI.settings.database_url = env_yml["database_url"].to_s
 
-          MainCommand.run ["generate", "model", "-y", "Post"]
-          MainCommand.run ["db", "migrate"]
-          MainCommand.run ["db", "drop"]
+        #   MainCommand.run ["generate", "model", "-y", "Post"]
+        #   MainCommand.run ["db", "migrate"]
+        #   MainCommand.run ["db", "drop"]
 
-          db_filename = CLI.settings.database_url.gsub("sqlite3:", "")
-          File.exists?(db_filename).should be_false
-          cleanup
-        end
+        #   db_filename = CLI.settings.database_url.gsub("sqlite3:", "")
+        #   File.exists?(db_filename).should be_false
+        #   cleanup
+        # end
       end
     end
 
     describe "postgres" do
-      context ENV["LAUNCH_ENV"] do
-        it "has #{ENV["LAUNCH_ENV"]}  connection settings" do
-          scaffold_app("#{TESTING_APP}", "-d", "pg")
-          env_yml = environment_yml(ENV["LAUNCH_ENV"], "#{Dir.current}/config/environments/")
-          env_yml["database_url"].should eq expected_db_url("pg", env)
-          cleanup
-        end
-      end
+      # context ENV["LAUNCH_ENV"] do
+      #   it "has #{ENV["LAUNCH_ENV"]}  connection settings" do
+      #     scaffold_app("#{TESTING_APP}", "-d", "pg")
+      #     env_yml = environment_yml(ENV["LAUNCH_ENV"], "#{Dir.current}/config/environments/")
+      #     env_yml["database_url"].should eq expected_db_url("pg", env)
+      #     cleanup
+      #   end
+      # end
     end
   end
 end

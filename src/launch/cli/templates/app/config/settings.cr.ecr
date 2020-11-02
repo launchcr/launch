@@ -59,7 +59,7 @@ Launch::Server.configure do |settings|
     settings.database_user = ""
     settings.database_password = ""
     settings.database_adapter = "<%= @adapter_name %>"
-    settings.migration_type = "crystal"
+    settings.database_name = "#{ENV["LAUNCH_ENV"]}_#{settings.name}_db"
     settings.migration_file_path = "db/migrations"
 
     # SSL Key File: The private key is a text file used initially to generate a
@@ -110,7 +110,7 @@ Launch::Server.configure do |settings|
     # settings.database_user = ""
     # settings.database_password = ""
     # settings.database_adapter = <%= @database %>
-    # settings.migration_type = "crystal"
+    # settings.database_name = "#{ENV["LAUNCH_ENV"]}_#{settings.name}_db"
     # settings.migration_file_path = "db/migrations"
 
     settings.ssl_key_file = Launch.credentials["production"]["ssl_key_file"]

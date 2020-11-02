@@ -1,4 +1,5 @@
 require "./helpers"
+require "./spinner"
 
 module Sentry
   class ProcessRunner
@@ -124,7 +125,7 @@ module Sentry
             ok_to_run = true
           else
             time = Time.monotonic
-            build_result = Launch::CLI::Spinner.start("Building...") do
+            build_result = Launch::CLI::Helpers::Spinner.start("Building...") do
               Launch::CLI::Helpers.run(build_command_run)
             end
 

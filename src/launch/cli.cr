@@ -5,7 +5,6 @@ require "./exceptions/*"
 require "./environment"
 require "./cli/commands"
 require "./logger/formatter"
-require "./cli/spinner"
 
 backend = Log::IOBackend.new(STDOUT)
 backend.formatter = Launch::Logger::Formatter.proc
