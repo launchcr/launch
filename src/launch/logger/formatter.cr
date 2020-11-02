@@ -1,3 +1,5 @@
+# This code comes from LuckyFramework. Credits to Lucky team.
+# https://github.com/luckyframework/lucky/blob/master/src/lucky/pretty_log_formatter.cr
 require "dexter"
 require "./*"
 
