@@ -2,7 +2,7 @@ require "http"
 require "json"
 
 module Launch::Serverless::Lambda
-  class HTTPRequest < HTTP::Request
+  class HTTPRequest < Launch::Serverless::HTTPRequest::Base
     getter request_context : Hash(String, JSON::Any)
     getter handler : String
 

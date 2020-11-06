@@ -18,7 +18,7 @@ module Launch::Environment
     getter database_user : String = ""
     getter database_password : String = ""
     getter database_adapter : String = "sqlite3"
-    getter database_name : String = "#{ENV["LAUNCH_ENV"]}_example_database"
+    getter database_name : String = "#{Launch.env.to_s}_example_database"
     getter migration_file_path : String = "db/migrations"
 
     getter redis_url : String = "redis://localhost:6379"

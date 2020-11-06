@@ -2,24 +2,22 @@ require "http"
 require "logger"
 
 module Launch::Serverless::Lambda
-  class Runtime
-    include Launch::Serverless::RuntimeInterface
-
+  class Runtime < Launch::Serverless::Runtime::Base
     AWS_LAMBDA_RUNTIME_API = "/2018-06-01/runtime/invocation/next"
 
     getter host : String
     getter port : Int16
     getter handlers : Hash(String, (JSON::Any -> JSON::Any)) = Hash(String, (JSON::Any -> JSON::Any)).new
-    getter logger : Logger
+    getter logger : ::Logger
 
-    def initialize(@logger : Logger = Logger.new(STDOUT, level: Logger::DEBUG))
+    def initialize(@logger : ::Logger = ::Logger.new(STDOUT, level: ::Logger::DEBUG))
       api = ENV["AWS_LAMBDA_RUNTIME_API"].split(":", 2)
 
       @host = api[0]
       @port = api[1].to_i16
 
       # easier to read logging within the lambda, includes the handler name
-      @logger.formatter = Logger::Formatter.new do |severity, datetime, _progname, message, io|
+      @logger.formatter = ::Logger::Formatter.new do |severity, datetime, _progname, message, io|
         label = severity.unknown? ? "ANY" : severity.to_s
         io << "[" << datetime.to_rfc3339 << "] ["
         io << label.rjust(5) << "] [" << ENV["_HANDLER"] << "] [" << message << "]"
@@ -51,7 +49,7 @@ module Launch::Serverless::Lambda
       client = HTTP::Client.new(host: @host, port: @port)
 
       begin
-        response = client.get
+        response = client.get AWS_LAMBDA_RUNTIME_API
         ENV["_X_AMZN_TRACE_ID"] = response.headers["Lambda-Runtime-Trace-Id"] || ""
 
         aws_request_id = response.headers["Lambda-Runtime-Aws-Request-Id"]

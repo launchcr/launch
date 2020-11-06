@@ -2,7 +2,7 @@ require "http"
 require "json"
 
 module Launch::Serverless::Lambda
-  class HTTPResponse
+  class HTTPResponse < Launch::Serverless::HTTPResponse::Base
     property body : String | JSON::Any | Nil
     getter headers : HTTP::Headers
     getter status_code

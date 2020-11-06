@@ -1,8 +1,10 @@
 require "http/client"
 
-module Launch
-  class Serverless
-    getter runtime : Launch::Serverless::RuntimeInterface
+module Launch::Serverless
+  class Server
+    getter runtime : Launch::Serverless::Runtime::Base
+    getter request_handler : Launch::Serverless::HTTPRequest::Base.class
+    getter response_handler : Launch::Serverless::HTTPResponse::Base.class
 
     def self.instance
       @@instance ||= new
@@ -20,6 +22,8 @@ module Launch
       case Launch.settings.serverless_provider
       when :lambda
         @runtime = Lambda::Runtime.new
+        @request_handler = Launch::Serverless::Lambda::HTTPRequest
+        @response_handler = Launch::Serverless::Lambda::HTTPResponse
       when nil
         raise "Serverless Enabled But No Provider"
       else
@@ -29,7 +33,7 @@ module Launch
 
     def run
       runtime.register_handler("httpevent") do |input|
-        req = Lambda::Builder::HTTPRequest.new(input)
+        req = request_handler.new(input)
         Log.info { "REQUEST: #{req.inspect}" }
 
         url = "#{Launch.settings.host}:#{Launch.settings.port}#{req.resource}"
@@ -42,7 +46,7 @@ module Launch
           )
 
         JSON.parse(
-          Lambda::Builder::HTTPResponse.new(
+          response_handler.new(
             status_code: response.status_code,
             headers: response.headers,
             body: response.body

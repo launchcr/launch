@@ -1,5 +1,5 @@
-module Launch::Serverless
-  module RuntimeInterface
+module Launch::Serverless::Runtime
+  abstract class Base
     # The host for the provider.
     abstract def host : String
 
