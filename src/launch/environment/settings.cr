@@ -32,6 +32,8 @@ module Launch::Environment
     property process_count : Int32 = 1
     property logging : Logging::OptionsType = Logging::DEFAULTS
     property auto_reload : Bool = true
+    property serverless : Bool = false
+    property serverless_provider : Symbol?
     property session : Hash(String, Int32 | String) = {
       "key"     => "launch.session",
       "store"   => "signed_cookie",
