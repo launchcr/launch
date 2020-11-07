@@ -9,9 +9,6 @@ module Launch::Serverless::Runtime
     # List of function handlers.
     abstract def handlers : Hash(String, (JSON::Any -> JSON::Any))
 
-    # Custom logger for streaming logs.
-    abstract def logger : Logger
-
     # Set the function handlers.
     abstract def register_handler(name : String, &handler : JSON::Any -> JSON::Any)
 

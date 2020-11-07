@@ -13,11 +13,11 @@ module Launch::Serverless::Lambda
     # Returns a `JSON::Any` object for passing on to AWS
     def as_json : JSON::Any
       json = Hash(String, JSON::Any).new
-
       json["statusCode"] = JSON::Any.new status_code.to_i64
 
-      if !body.nil?
-        json["body"] = (body.class == JSON::Any ? body.as(JSON::Any) : JSON::Any.new(body.as(String)))
+      unless body.nil?
+        json["body"] =
+          (body.class == JSON::Any ? body.as(JSON::Any) : JSON::Any.new(body.as(String)))
       end
 
       json["headers"] = JSON::Any.new headers.to_h.transform_values { |v| JSON::Any.new(v.first) }
@@ -29,7 +29,7 @@ module Launch::Serverless::Lambda
       json.object do
         json.field "statusCode", @status_code
 
-        if !@body.nil?
+        unless @body.nil?
           json.field "body", @body
         end
 

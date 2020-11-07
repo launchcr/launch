@@ -10,18 +10,20 @@ module Launch::Serverless::Lambda
       headers = HTTP::Headers.new
 
       body["headers"].as_h.each { |k, v| {headers.add(k, v.as_s)} }
+
       request_body = nil
       if (body["body"]? && body["body"].as_s?)
         request_body = body["body"].as_s
       end
 
       path = body["path"].as_s
-      if (body["queryStringParameters"]? && body["queryStringParameters"].as_h?)
-        qs = Hash(String, String).new
+      if body["queryStringParameters"]? && body["queryStringParameters"].as_h?
+        query_params = Hash(String, String).new
+
         body["queryStringParameters"].as_h.each do |key, value|
-          qs[key] = value.to_s
+          query_params[key] = value.to_s
         end
-        path += "?" + HTTP::Params.encode qs
+        path += "?" + HTTP::Params.encode query_params
       end
 
       super(body["httpMethod"].as_s, path, headers, request_body, internal: nil)
@@ -50,6 +52,7 @@ module Launch::Serverless::Lambda
       value.read_object_key
       handler = value.read_string
       value.read_end_object
+
       HTTPRequest.new body, handler
     end
   end

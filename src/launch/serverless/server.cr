@@ -41,7 +41,7 @@ module Launch::Serverless
         Log.info { "REQUEST: #{req.inspect}" }
 
         url = "#{Launch.settings.host}:#{Launch.settings.port}#{req.resource}"
-        Log.info { url }
+
         response =
           HTTP::Client.get(
             url,
@@ -49,13 +49,11 @@ module Launch::Serverless
             body: req.body
           )
 
-        JSON.parse(
-          response_handler.new(
-            status_code: response.status_code,
-            headers: response.headers,
-            body: response.body
-          ).to_json
-        )
+        JSON.parse response_handler.new(
+          status_code: response.status_code,
+          headers: response.headers,
+          body: response.body
+        ).to_json
       end
 
       runtime.run
