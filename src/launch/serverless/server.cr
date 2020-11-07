@@ -15,9 +15,7 @@ module Launch::Serverless
     end
 
     def initialize
-      spawn name: "server" do
-        Launch::Server.start
-      end
+      Launch::Server.start
 
       case Launch.settings.serverless_provider
       when :lambda

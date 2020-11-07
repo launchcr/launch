@@ -59,7 +59,6 @@ module Launch
           "#{settings.name.capitalize.colorize.bold} at #{host_url}"
       end
       handler.prepare_pipelines
-      server = HTTP::Server.new(handler)
 
       if ssl_enabled?
         ssl_config = Launch::SSL.new(settings.ssl_key_file.not_nil!, settings.ssl_cert_file.not_nil!).generate_tls
@@ -84,7 +83,7 @@ module Launch
             "#{prefix} - " +
               "Startup Time #{start_up_time}"
           end
-          server.listen
+          listen
           break
         rescue e : IO::Error
           Log.error(exception: e) { "#{prefix} - Restarting..." }
@@ -123,6 +122,18 @@ module Launch
 
     private def start_up_time
       elapsed_text(Time.local - @time).colorize.bold
+    end
+
+    private def listen
+      if Launch.settings.serverless
+        spawn server.listen
+      else
+        server.listen
+      end
+    end
+
+    private def server
+      @server ||= HTTP::Server.new(handler)
     end
   end
 end
