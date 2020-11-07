@@ -127,6 +127,7 @@ module Launch
     private def listen
       if Launch.settings.serverless
         spawn server.listen
+        Launch::Serverless::Server.start
       else
         server.listen
       end

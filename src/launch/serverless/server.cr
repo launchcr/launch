@@ -1,6 +1,10 @@
 require "http/client"
 
 module Launch::Serverless
+  # Serves as serverless run.
+  #
+  # Handles settings the runtime, request_handler & response_handler along with
+  # kicking off the api request to the HTTP server.
   class Server
     getter runtime : Launch::Serverless::Runtime::Base
     getter request_handler : Launch::Serverless::HTTPRequest::Base.class
@@ -10,13 +14,12 @@ module Launch::Serverless
       @@instance ||= new
     end
 
+    # Main entry to start the serverless environment
     def self.start
       instance.run
     end
 
     def initialize
-      Launch::Server.start
-
       case Launch.settings.serverless_provider
       when :lambda
         @runtime = Lambda::Runtime.new
@@ -29,6 +32,9 @@ module Launch::Serverless
       end
     end
 
+    # Returns the response from the server.
+    #
+    # Handles registering the `httpevent` along with running it.
     def run
       runtime.register_handler("httpevent") do |input|
         req = request_handler.new(input)
