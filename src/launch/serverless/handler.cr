@@ -5,7 +5,7 @@ module Launch::Serverless
   #
   # Handles settings the runtime, request_handler & response_handler along with
   # kicking off the api request to the HTTP server.
-  class Server
+  class Handler
     getter runtime : Launch::Serverless::Runtime::Base
     getter request_handler : Launch::Serverless::HTTPRequest::Base.class
     getter response_handler : Launch::Serverless::HTTPResponse::Base.class
