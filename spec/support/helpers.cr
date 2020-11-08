@@ -1,6 +1,7 @@
 require "./helpers/controller_helper"
 require "./helpers/cookie_helper"
 require "./helpers/plugin_helper"
+require "./helpers/serverless_helper"
 require "./helpers/session_helper"
 require "./helpers/router_helper"
 require "./helpers/websockets_helper"
