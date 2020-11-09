@@ -9,6 +9,10 @@ module Launch::Environment
       Dotenv.load(path: @path)
       Log.debug { "API Server - #{@path} was loaded" }
     rescue e : File::NotFoundError
+      load_dotenv
+    end
+
+    private def load_dotenv
       Dotenv.load
       Log.debug { "API Server - .env was loaded" }
     rescue e : File::NotFoundError
