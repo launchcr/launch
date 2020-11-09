@@ -7,14 +7,10 @@ require "./support/file_encryptor"
 module Launch::Environment
   macro included
     @@settings : Settings?
-    @@credentials : YAML::Any?
+    Loader.new.load_dotenv_files # Ensure .env files are loaded
 
     def self.settings : Settings
       @@settings ||= Settings.new
-    end
-
-    def self.credentials : YAML::Any
-      @@credentials ||= Loader.new.credentials
     end
 
     def self.env : Env
