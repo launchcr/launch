@@ -3,6 +3,7 @@ require "./migration_spec_helper"
 
 module Launch::CLI
   describe EmptyMigration do
+    # ameba:disable Lint/UselessAssign
     migration = MigrationSpecHelper.sample_migration_for(Migration)
 
     # TODO: Is this needed? Can we get rid of this file?
