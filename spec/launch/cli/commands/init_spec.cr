@@ -79,7 +79,7 @@ module Launch::CLI
         it "generates #{db} correctly" do
           scaffold_app(TESTING_APP, "-d", db)
           set_dir
-          %w(development test).each do |env|
+          %w(development test).each do
             db_adapter = launch_yml["database"].as_s
 
             if db == "sqlite"
