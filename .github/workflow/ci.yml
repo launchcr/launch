@@ -1,4 +1,4 @@
-name: CI
+name: Build
 
 on:
   pull_request:
@@ -29,6 +29,19 @@ jobs:
 
   test_latest:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379
     steps:
       - name: Install Crystal
         run: |
@@ -36,12 +49,25 @@ jobs:
           sudo apt -y install libssl-dev libxml2-dev libyaml-dev libgmp-dev libreadline-dev libz-dev libevent-dev gcc pkg-config tzdata libpcre3-dev
       - uses: actions/checkout@v1
       - name: Install Dependencies
-        run: shards install 
+        run: shards install
       - name: Specs
         run: crystal spec --order random --error-on-warnings
-  
+
   test_nightly:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        # Docker Hub image
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379
     steps:
       - name: Install Crystal
         run: |
@@ -49,6 +75,6 @@ jobs:
           sudo apt -y install libssl-dev libxml2-dev libyaml-dev libgmp-dev libreadline-dev libz-dev libevent-dev gcc pkg-config tzdata libpcre3-dev
       - uses: actions/checkout@v1
       - name: Install Dependencies
-        run: shards install
+        run: shards install --ignore-crystal-version
       - name: Specs
         run: crystal spec --order random --error-on-warnings
