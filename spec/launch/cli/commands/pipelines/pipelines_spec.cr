@@ -15,25 +15,20 @@ module Launch::CLI
     context "in an `launch new` with default options" do
       output = ""
 
-      pipeline_names = %w(web static)
+      pipeline_names = %w(api)
 
-      web_default_plugs = %w(
-        Citrine::I18n::Handler
+      # Citrine::I18n::Handler
+      # Launch::Pipe::Flash
+      # Launch::Pipe::CSRF
+      api_default_plugs = %w(
         Launch::Pipe::Error
         Launch::Pipe::Logger
         Launch::Pipe::Session
-        Launch::Pipe::Flash
-        Launch::Pipe::CSRF
-      )
-
-      static_default_plugs = %w(
-        Launch::Pipe::Error
-        Launch::Pipe::Static
+        Launch::Pipe::CORS
       )
 
       pipe_plugs = {
-        "web"    => web_default_plugs,
-        "static" => static_default_plugs,
+        "api" => api_default_plugs,
       }
 
       describe "with the default routes" do
@@ -54,7 +49,7 @@ module Launch::CLI
             output.should contain pipeline
           end
 
-          (web_default_plugs + static_default_plugs).each do |plug|
+          (api_default_plugs).each do |plug|
             output.should contain plug
           end
 

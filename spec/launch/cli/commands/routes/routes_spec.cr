@@ -22,18 +22,10 @@ module Launch::CLI
           output.should contain header
         end
 
-        expected = "Launch::Controller::Static"
-        output.should contain expected
-        line = output_lines.find("") { |this_line| this_line.includes? expected }
-        expectations = %w(get Launch::Controller::Static index static /*)
-        expectations.each do |expectation|
-          line.should contain expectation
-        end
-
         expected = "HomeController"
         output.should contain expected
         line = output_lines.find("") { |this_line| this_line.includes? expected }
-        expectations = %w(get HomeController index web /)
+        expectations = %w(get HomeController index api /)
         expectations.each do |expectation|
           line.should contain expectation
         end
@@ -46,23 +38,13 @@ module Launch::CLI
         MainCommand.run ["routes", "--json"] { |cmd| output = cmd.out.gets_to_end }
         routes = route_table_from_json(output)
 
-        expected = routes.find { |route| route.controller == "Launch::Controller::Static" }
-        expected.nil?.should be_false
-        if expected
-          expected.verb.should eq "get"
-          expected.uri_pattern.should eq "/*"
-          expected.action.should eq "index"
-          expected.pipeline.should eq "static"
-          expected.scope.should eq ""
-        end
-
         expected = routes.find { |route| route.controller == "HomeController" }
         expected.nil?.should be_false
         if expected
           expected.verb.should eq "get"
           expected.uri_pattern.should eq "/"
           expected.action.should eq "index"
-          expected.pipeline.should eq "web"
+          expected.pipeline.should eq "api"
           expected.scope.should eq ""
         end
         cleanup

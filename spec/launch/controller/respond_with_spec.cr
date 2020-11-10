@@ -1,14 +1,17 @@
 require "../../spec_helper"
 
+def setup
+  request = HTTP::Request.new("GET", "")
+  request.headers["Accept"] = ""
+  create_context(request)
+end
+
 module Launch::Controller
   describe Base do
     describe "#respond_with" do
-      request = HTTP::Request.new("GET", "")
-      request.headers["Accept"] = ""
-      context = create_context(request)
-
       describe "#string input" do
         it "respond_with html as default option" do
+          context = setup
           expected_result = "<html><body><h1>Elorest <3 Launch</h1></body></html>"
           ResponsesController.new(context).index.should eq expected_result
           context.response.headers["Content-Type"].should eq "text/html"
@@ -16,6 +19,7 @@ module Launch::Controller
         end
 
         it "respond_with html as default option with */* header" do
+          context = setup
           expected_result = "<html><body><h1>Elorest <3 Launch</h1></body></html>"
           context.request.headers["Accept"] = "*/*"
           ResponsesController.new(context).index.should eq expected_result
@@ -24,6 +28,7 @@ module Launch::Controller
         end
 
         it "respond_with html" do
+          context = setup
           expected_result = "<html><body><h1>Elorest <3 Launch</h1></body></html>"
           context.request.headers["Accept"] = "text/html"
           ResponsesController.new(context).index.should eq expected_result
@@ -32,6 +37,7 @@ module Launch::Controller
         end
 
         it "responds with json" do
+          context = setup
           expected_result = %({"type":"json","name":"Launchator"})
           context.request.headers["Accept"] = "application/json"
           ResponsesController.new(context).index.should eq expected_result
@@ -40,6 +46,7 @@ module Launch::Controller
         end
 
         it "responds with json having */* at end" do
+          context = setup
           expected_result = %({"type":"json","name":"Launchator"})
           context.request.headers["Accept"] = "application/json,*/*"
           ResponsesController.new(context).index.should eq expected_result
@@ -48,6 +55,7 @@ module Launch::Controller
         end
 
         it "responds with javascript" do
+          context = setup
           expected_result = %(console.log('Everyone <3 Launch'))
           context.request.headers["Accept"] = "application/javascript"
           ResponsesController.new(context).index.should eq expected_result
@@ -56,6 +64,7 @@ module Launch::Controller
         end
 
         it "responds with javascript having */* at end" do
+          context = setup
           expected_result = %(console.log('Everyone <3 Launch'))
           context.request.headers["Accept"] = "application/javascript,*/*"
           ResponsesController.new(context).index.should eq expected_result
@@ -64,6 +73,7 @@ module Launch::Controller
         end
 
         it "responds with xml" do
+          context = setup
           expected_result = "<xml><body><h1>Sort of xml</h1></body></xml>"
           context.request.headers["Accept"] = "application/xml"
           ResponsesController.new(context).index.should eq expected_result
@@ -72,6 +82,7 @@ module Launch::Controller
         end
 
         it "responds with text" do
+          context = setup
           expected_result = "Hello I'm text!"
           context.request.headers["Accept"] = "text/plain"
           ResponsesController.new(context).index.should eq expected_result
@@ -80,6 +91,7 @@ module Launch::Controller
         end
 
         it "responds with json for path.json" do
+          context = setup
           expected_result = %({"type":"json","name":"Launchator"})
           context.request.path = "/response/1.json"
           ResponsesController.new(context).index.should eq expected_result
@@ -88,6 +100,7 @@ module Launch::Controller
         end
 
         it "responds with xml for path.xml" do
+          context = setup
           expected_result = "<xml><body><h1>Sort of xml</h1></body></xml>"
           context.request.path = "/response/1.xml"
           ResponsesController.new(context).index.should eq expected_result
@@ -96,6 +109,7 @@ module Launch::Controller
         end
 
         it "responds with text for path.txt" do
+          context = setup
           expected_result = "Hello I'm text!"
           context.request.path = "/response/1.txt"
           ResponsesController.new(context).index.should eq expected_result
@@ -104,6 +118,7 @@ module Launch::Controller
         end
 
         it "responds with text for path.text" do
+          context = setup
           expected_result = "Hello I'm text!"
           context.request.path = "/response/1.text"
           ResponsesController.new(context).index.should eq expected_result
@@ -112,6 +127,7 @@ module Launch::Controller
         end
 
         it "responds with 406 for path.text when text hasn't been defined" do
+          context = setup
           expected_result = "Response Not Acceptable."
           context.request.path = "/response/1.text"
           ResponsesController.new(context).show.should eq expected_result
@@ -119,6 +135,7 @@ module Launch::Controller
         end
 
         it "respond with default if extension is invalid and accepts isn't defined" do
+          context = setup
           context.response.status_code = 200
           expected_result = "<html><body><h1>Elorest <3 Launch</h1></body></html>"
           context.request.path = "/response/1.texas"
@@ -129,6 +146,7 @@ module Launch::Controller
         end
 
         it "responds with or accept header request if extension is invalid" do
+          context = setup
           expected_result = %({"type":"json","name":"Launchator"})
           context.request.headers["Accept"] = "application/json"
           context.request.path = "/response/1.texas"
@@ -138,6 +156,7 @@ module Launch::Controller
         end
 
         it "responds html as default with invalid extension but having */* at end" do
+          context = setup
           expected_result = "<html><body><h1>Elorest <3 Launch</h1></body></html>"
           context.request.headers["Accept"] = "unsupported/extension,*/*"
           ResponsesController.new(context).index.should eq expected_result
@@ -146,6 +165,7 @@ module Launch::Controller
         end
 
         it "responds with 403 custom status_code" do
+          context = setup
           expected_result = %({"type":"json","error":"Unauthorized"})
           context.request.headers["Accept"] = "application/json"
           ResponsesController.new(context).custom_status_code.should eq expected_result
@@ -156,6 +176,7 @@ module Launch::Controller
 
       describe "#proc input" do
         it "responds with html from a proc" do
+          context = setup
           context.response.status_code = 200
           expected_result = "<html><body><h1>Elorest <3 Launch</h1></body></html>"
           context.request.headers["Accept"] = "text/html"
@@ -165,6 +186,7 @@ module Launch::Controller
         end
 
         it "redirects from a proc" do
+          context = setup
           context.response.status_code = 200
           expected_result = "302"
           context.request.headers["Accept"] = "text/html"
@@ -173,18 +195,18 @@ module Launch::Controller
           context.response.status_code.should eq 302
         end
 
-        pending "redirects with flash from a proc"
-        # it "redirects with flash from a proc" do
-        #   context.response.status_code = 200
-        #   expected_result = "302"
-        #   context.request.headers["Accept"] = "text/html"
-        #   ResponsesController.new(context).proc_redirect_flash.should eq expected_result
-        #   context.flash["success"].should eq "launch is the bizness"
-        #   context.response.headers["Location"].should eq "/some_path"
-        #   context.response.status_code.should eq 302
-        # end
+        it "redirects with flash from a proc" do
+          context = setup
+          context.response.status_code = 200
+          expected_result = "302"
+          context.request.headers["Accept"] = "text/html"
+          ResponsesController.new(context).proc_redirect_flash.should eq expected_result
+          context.response.headers["Location"].should eq "/some_path"
+          context.response.status_code.should eq 302
+        end
 
         it "redirects with a status code from a proc" do
+          context = setup
           context.response.status_code = 200
           expected_result = "301"
           context.request.headers["Accept"] = "text/html"

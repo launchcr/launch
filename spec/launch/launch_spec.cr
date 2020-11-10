@@ -7,6 +7,7 @@ struct RoomSocket < Launch::WebSockets::ClientSocket; end
 describe Launch do
   describe ".env" do
     it "should return test" do
+      Launch::Environment::Env.new "test"
       Launch.env.test?.should be_truthy
       Launch.env.==("test").should be_truthy
       Launch.env.==("development").should be_falsey

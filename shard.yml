@@ -16,11 +16,11 @@ targets:
 dependencies:
   amber_router:
     github: amberframework/amber-router
-    version: ~> 0.3.0
+    version: ~> 0.3.0 # 0.4.2
 
   cli:
     github: amberframework/cli
-    version: ~> 0.9.1
+    version: ~> 0.9.1 # 0.9.3
 
   compiled_license:
     github: elorest/compiled_license
@@ -40,15 +40,15 @@ dependencies:
 
   pg:
     github: will/crystal-pg
-    version: ~> 0.21.1
+    version: ~> 0.21.1 # 0.22.1
 
   mysql:
     github: crystal-lang/crystal-mysql
-    version: ~> 0.11.1
+    version: ~> 0.11.1 # 0.12.0
 
   sqlite3:
     github: crystal-lang/crystal-sqlite3
-    version: ~> 0.16.0
+    version: ~> 0.16.0 # 0.17.0
 
   redis:
     github: stefanwille/crystal-redis
@@ -84,4 +84,4 @@ dependencies:
 development_dependencies:
   ameba:
     github: veelenga/ameba
-    version: ~> 0.12.1
+    version: ~> 0.13.2
