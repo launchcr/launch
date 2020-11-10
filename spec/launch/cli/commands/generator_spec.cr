@@ -11,7 +11,7 @@ module Launch::CLI
     camel_case = "PostComment"
     snake_case = "post_comment"
     incorrect_case = "Post_comment"
-    display = "Post Comment"
+    display = "PostComment"
     class_definition_prefix = "class #{camel_case}"
     spec_definition_prefix = "describe #{camel_case}"
 
@@ -79,20 +79,20 @@ module Launch::CLI
         File.exists?("./src/models/#{snake_case}.cr").should be_true
         File.exists?("./spec/controllers/#{snake_case}_controller_spec.cr").should be_true
         File.exists?("./src/controllers/#{snake_case}_controller.cr").should be_true
-        File.exists?("./src/views/#{snake_case}/_form.ecr").should be_true
-        File.exists?("./src/views/#{snake_case}/edit.ecr").should be_true
-        File.exists?("./src/views/#{snake_case}/index.ecr").should be_true
-        File.exists?("./src/views/#{snake_case}/new.ecr").should be_true
-        File.exists?("./src/views/#{snake_case}/show.ecr").should be_true
+        File.exists?("./src/components/#{camel_case}/Form.tsx").should be_true
+        File.exists?("./src/pages/#{snake_case}s/[id]/edit.tsx").should be_true
+        File.exists?("./src/pages/#{snake_case}s/index.tsx").should be_true
+        File.exists?("./src/pages/#{snake_case}s/new.tsx").should be_true
+        File.exists?("./src/pages/#{snake_case}s/[id]/index.tsx").should be_true
         File.read("./spec/models/#{snake_case}_spec.cr").should contain spec_definition_prefix
         File.read("./src/models/#{snake_case}.cr").should contain class_definition_prefix
         File.read("./spec/controllers/#{snake_case}_controller_spec.cr").should contain spec_definition_prefix
         File.read("./src/controllers/#{snake_case}_controller.cr").should contain class_definition_prefix
-        File.read("./src/views/#{snake_case}/_form.ecr").should contain snake_case
-        File.read("./src/views/#{snake_case}/edit.ecr").should contain display
-        File.read("./src/views/#{snake_case}/index.ecr").should contain display
-        File.read("./src/views/#{snake_case}/new.ecr").should contain display
-        File.read("./src/views/#{snake_case}/show.ecr").should contain snake_case
+        File.read("./src/components/#{camel_case}/Form.tsx").should contain snake_case
+        File.read("./src/pages/#{snake_case}s/[id]/edit.tsx").should contain display
+        File.read("./src/pages/#{snake_case}s/index.tsx").should contain display
+        File.read("./src/pages/#{snake_case}s/new.tsx").should contain (display + "New")
+        File.read("./src/pages/#{snake_case}s/[id]/index.tsx").should contain snake_case
         File.read("./config/routes.cr").should contain "#{camel_case}Controller"
         File.read("./config/routes.cr").should_not contain "#{incorrect_case}Controller"
       end
