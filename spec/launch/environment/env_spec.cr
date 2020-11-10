@@ -4,6 +4,10 @@ module Launch::Environment
   describe Env do
     {% for env in %w(development staging test sandbox production) %}
     describe ".{{env.id}}?" do
+      after_each do
+        launch_env = Env.new "test"
+      end
+
       it "returns true when the environment is {{env.id}}" do
         launch_env = Env.new {{env}}
         launch_env.{{env.id}}?.should be_truthy
@@ -27,6 +31,10 @@ module Launch::Environment
     {% end %}
 
     describe ".==" do
+      after_each do
+        launch_env = Env.new "test"
+      end
+
       it "returns true when the environment matches the argument(String)" do
         launch_env = Env.new "staging"
         result = launch_env == "staging"
@@ -50,6 +58,10 @@ module Launch::Environment
     end
 
     describe "!=" do
+      after_each do
+        launch_env = Env.new "test"
+      end
+
       it "returns true when the environment doesn't match the argument" do
         launch_env = Env.new "invalid"
         result = launch_env != :staging
@@ -60,6 +72,10 @@ module Launch::Environment
 
     describe ".in?" do
       context "when settings environment is in list" do
+        after_each do
+          launch_env = Env.new "test"
+        end
+
         it "returns true when array is passed in" do
           launch_env = Env.new "development"
 
@@ -82,6 +98,10 @@ module Launch::Environment
       end
 
       context "when settings environment is not in list" do
+        after_each do
+          launch_env = Env.new "test"
+        end
+
         it "returns false" do
           launch_env = Env.new "invalid"
 
