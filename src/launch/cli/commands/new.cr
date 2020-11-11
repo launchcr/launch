@@ -46,11 +46,6 @@ module Launch::CLI
           generator = Generators.new(name, full_path_name)
         end
         generator.generate_app(options)
-
-        # Encrypts production.yml by default.
-        cwd = Dir.current; Dir.cd(full_path_name)
-        MainCommand.run ["encrypt", "production", "--noedit"]
-        Dir.cd(cwd)
       end
     end
   end
