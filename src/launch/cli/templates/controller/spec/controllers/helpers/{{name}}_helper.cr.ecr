@@ -1,0 +1,26 @@
+<% params_name =  "#{@name.underscore}_params" -%>
+<% hash_name   =  "#{@name.underscore}_hash" -%>
+<% create_model_method  =  "create_#{@name.underscore}" -%>
+module <%= class_name %>Helpers
+  def <%= hash_name %>
+    <%- if @fields_hash.empty? -%>
+    {} of String => String
+    <%- else -%>
+    <%= @fields_hash.to_s %>
+    <%- end -%>
+  end
+
+  def <%= params_name %>
+    params = [] of String
+    <%- @fields_hash.keys.map do |k| -%>
+    params << "<%= k %>=#{<%= hash_name %>["<%= k %>"]}"
+    <%- end -%>
+    params.join("&")
+  end
+
+  def <%= create_model_method %>
+    model = <%= class_name %>.new(<%= hash_name %>)
+    model.save
+    model
+  end
+end

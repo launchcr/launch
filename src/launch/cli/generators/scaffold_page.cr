@@ -5,8 +5,6 @@ module Launch::CLI
     def initialize(name, fields)
       super(name, fields)
       add_timestamp_fields
-      # TODO
-      # add_static_routes
     end
   end
 end

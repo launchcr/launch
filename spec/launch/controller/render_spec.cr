@@ -1,5 +1,6 @@
 require "../../spec_helper"
 require "../../support/fixtures/render_fixtures"
+require "kilt/slang"
 
 include RenderFixtures
 

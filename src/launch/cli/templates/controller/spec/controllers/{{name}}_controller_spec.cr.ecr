@@ -1,9 +1,59 @@
+<% params_name =  "#{@name.underscore}_params" -%>
+<% hash_name   =  "#{@name.underscore}_hash" -%>
+<% create_model_method  =  "create_#{@name.underscore}" -%>
 require "./spec_helper"
+require "./helpers/<%= @name %>_helper"
+
+include <%= class_name %>Helpers
 
 describe <%= class_name %>Controller do
-<% @actions.each do |action, verb| -%>
-  describe "<%= class_name %>Controller#<%= action %>" do
-    it "renders the view" do
-    end
+  subject = ControllerTest.new
+
+  it "renders <%= @name %> index json" do
+    model = create_<%= @name.downcase %>
+    response = subject.get "/<%= name_plural %>"
+
+    response.status_code.should eq(200)
+    <%- unless @fields_hash.empty? -%>
+    response.body.should contain("Fake")
+    <%- end -%>
   end
-<% end %>end
+
+  it "renders <%= @name %> show json" do
+    model = create_<%= @name.downcase %>
+    location = "/<%= name_plural %>/#{model.id}"
+
+    response = subject.get location
+
+    response.status_code.should eq(200)
+    <%- unless @fields_hash.empty? -%>
+    response.body.should contain("Fake")
+    <%- end -%>
+  end
+
+  it "creates a <%= @name %>" do
+    response = subject.post "/<%= name_plural %>", body: <%= params_name %>
+
+    response.status_code.should eq(201)
+    <%- unless @fields_hash.empty? -%>
+    response.body.should contain "Fake"
+    <%- end -%>
+  end
+
+  it "updates a <%= @name %>" do
+    model = <%= create_model_method %>
+    response = subject.patch "/<%= name_plural %>/#{model.id}", body: <%= params_name %>
+
+    response.status_code.should eq(200)
+    <%- unless @fields_hash.empty? -%>
+    response.body.should contain "Fake"
+    <%- end -%>
+  end
+
+  it "deletes a <%= @name %>" do
+    model = <%= create_model_method %>
+    response = subject.delete "/<%= name_plural %>/#{model.id}"
+
+    response.status_code.should eq(204)
+  end
+end
