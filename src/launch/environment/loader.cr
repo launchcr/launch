@@ -17,6 +17,7 @@ module Launch::Environment
       Log.debug { "API Server - .env was loaded" }
     rescue e : File::NotFoundError
       Log.debug { "API Server - No environment variables to load" }
+      false
     end
   end
 end
