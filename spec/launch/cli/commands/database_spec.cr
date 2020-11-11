@@ -18,7 +18,7 @@ module Launch::CLI
         end
 
         it "does not create the database when db create" do
-          config_yml = prepare_test_app
+          prepare_test_app
           db_filename = "./#{TEST_APP_NAME}_development.db"
           File.exists?(db_filename).should be_false
           cleanup

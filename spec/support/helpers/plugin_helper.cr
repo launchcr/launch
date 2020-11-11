@@ -3,7 +3,7 @@ module PluginHelper
     <<-FILE
       routes:
         pipelines:
-          web:
+          api:
             - post "/plugin", PluginController, :create
     FILE
   end

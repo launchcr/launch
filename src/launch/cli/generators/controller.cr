@@ -28,7 +28,7 @@ module Launch::CLI
     end
 
     private def add_routes
-      add_routes :web, <<-ROUTES
+      add_routes :api, <<-ROUTES
         #{@actions.map { |action, verb| %Q(#{verb} "/#{@name}/#{action}", #{class_name}Controller, :#{action}) }.join("\n    ")}
       ROUTES
     end
