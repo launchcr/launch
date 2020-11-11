@@ -1,21 +1,23 @@
-require "ecr/macros"
+require "dotenv"
 
 module Launch::Environment
   class Loader
-    @path : String
-
-    def initialize(path = "./config/credentials.yml.enc")
-      @path = path
+    def initialize(@path = ".env.#{Launch.env}")
     end
 
-    def credentials : YAML::Any
-      YAML.parse(Support::FileEncryptor.read_as_string(credentials_settings_file))
+    def load_dotenv_files
+      Dotenv.load(path: @path)
+      Log.debug { "API Server - #{@path} was loaded" }
     rescue e : File::NotFoundError
-      raise Exceptions::Credentials.new
+      load_dotenv
     end
 
-    private def credentials_settings_file : String
-      @credentials ||= File.expand_path(@path)
+    private def load_dotenv
+      Dotenv.load
+      Log.debug { "API Server - .env was loaded" }
+    rescue e : File::NotFoundError
+      Log.debug { "API Server - No environment variables to load" }
+      false
     end
   end
 end

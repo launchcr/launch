@@ -30,6 +30,9 @@ dependencies:
     github: luckyframework/dexter
     version: ~> 0.3
 
+  dotenv:
+    github: drum445/dotenv
+
   kilt:
     github: jeromegn/kilt
     version: ~> 0.6.0
