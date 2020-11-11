@@ -43,7 +43,7 @@ Launch::Server.configure do |settings|
     settings.process_count = 1
 
     # PORT: This is the port that you're application will run on. Examples would be (80, 443, 3000, 8080)
-    settings.port = ENV["PORT"]
+    settings.port = ENV["PORT"].to_i32
 
     # Redis URL: Redis is an in memory key value storage. Launch utilizes redis as
     # a storing option for session information.

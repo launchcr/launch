@@ -2,47 +2,14 @@
 <% hash_name   =  "#{@name.underscore}_hash" -%>
 <% create_model_method  =  "create_#{@name.underscore}" -%>
 require "./spec_helper"
+require "./helpers/<%= @name %>_helper"
 
-def <%= hash_name %>
-  <%- if @fields_hash.empty? -%>
-  {} of String => String
-  <%- else -%>
-  <%= @fields_hash.to_s %>
-  <%- end -%>
-end
+include <%= class_name %>Helpers
 
-def <%= params_name %>
-  params = [] of String
-  <%- @fields_hash.keys.map do |k| -%>
-  params << "<%= k %>=#{<%= hash_name %>["<%= k %>"]}"
-  <%- end -%>
-  params.join("&")
-end
-
-def <%= create_model_method %>
-  model = <%= class_name %>.new(<%= hash_name %>)
-  model.save
-  model
-end
-
-class <%= class_name %>ControllerTest < GarnetSpec::Controller::Test
-  getter handler : Launch::Pipe::Pipeline
-
-  def initialize
-    @handler = Launch::Pipe::Pipeline.new
-    @handler.build :api do
-      plug Launch::Pipe::Error.new
-      plug Launch::Pipe::Session.new
-    end
-    @handler.prepare_pipelines
-  end
-end
-
-describe <%= class_name %>ControllerTest do
-  subject = <%= class_name %>ControllerTest.new
+describe <%= class_name %>Controller do
+  subject = ControllerTest.new
 
   it "renders <%= @name %> index json" do
-    <%= class_name %>.clear
     model = create_<%= @name.downcase %>
     response = subject.get "/<%= name_plural %>"
 
@@ -53,7 +20,6 @@ describe <%= class_name %>ControllerTest do
   end
 
   it "renders <%= @name %> show json" do
-    <%= class_name %>.clear
     model = create_<%= @name.downcase %>
     location = "/<%= name_plural %>/#{model.id}"
 
@@ -66,7 +32,6 @@ describe <%= class_name %>ControllerTest do
   end
 
   it "creates a <%= @name %>" do
-    <%= class_name %>.clear
     response = subject.post "/<%= name_plural %>", body: <%= params_name %>
 
     response.status_code.should eq(201)
@@ -76,7 +41,6 @@ describe <%= class_name %>ControllerTest do
   end
 
   it "updates a <%= @name %>" do
-    <%= class_name %>.clear
     model = <%= create_model_method %>
     response = subject.patch "/<%= name_plural %>/#{model.id}", body: <%= params_name %>
 
@@ -87,7 +51,6 @@ describe <%= class_name %>ControllerTest do
   end
 
   it "deletes a <%= @name %>" do
-    <%= class_name %>.clear
     model = <%= create_model_method %>
     response = subject.delete "/<%= name_plural %>/#{model.id}"
 

@@ -133,7 +133,7 @@ module Launch::CLI
           "# It is used for Jennifer database operations.\n" +
           "# Please do not modify.\n\n" +
           "require \"launch\"\n" +
-          "require \"./config/settings\"\n" +
+          "require \"./config/environments/*\"\n" +
           "require \"./config/jennifer\"\n" +
           "require \"./db/migrations/*\"\n" +
           "require \"sam\"\n" +
