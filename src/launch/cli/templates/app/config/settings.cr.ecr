@@ -62,6 +62,14 @@ Launch::Server.configure do |settings|
     settings.database_name = "#{ENV["LAUNCH_ENV"]}_#{settings.name}_db"
     settings.migration_file_path = "db/migrations"
 
+    # Serverless: Wether the outputted binary will be run in a serverless environement
+    # such as AWS Lambda, Google Cloud Functions, etc.
+    settings.serverless = false
+
+    # SERVERLESS PROVIDER: A symbol representing the provider of the serverless environment.
+    # Currently only `:lambda` is supported.
+    settings.serverless_provider = nil
+
     # SSL Key File: The private key is a text file used initially to generate a
     # Certificate Signing Request (CSR), and later to secure and verify connections
     # using the certificate created per that request. The private key is used to create
@@ -73,7 +81,6 @@ Launch::Server.configure do |settings|
     # small data files that digitally bind a cryptographic key to an organization's
     # details. When installed on a web server, it activates the padlock and the https
     # protocol and allows secure connections from a web server to a browser.
-
     settings.ssl_cert_file = nil
 
     # Session: A Hash that specifies the session storage mechanism, expiration and key to be used
@@ -112,6 +119,9 @@ Launch::Server.configure do |settings|
     # settings.database_adapter = <%= @database %>
     # settings.database_name = "#{ENV["LAUNCH_ENV"]}_#{settings.name}_db"
     # settings.migration_file_path = "db/migrations"
+
+    settings.serverless = false
+    settings.serverless_provider = nil
 
     settings.ssl_key_file = Launch.credentials["production"]["ssl_key_file"]
     settings.ssl_cert_file = Launch.credentials["production"]["ssl_cert_file"]

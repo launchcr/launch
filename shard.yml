@@ -84,3 +84,7 @@ development_dependencies:
   ameba:
     github: veelenga/ameba
     version: ~> 0.13.2
+  
+  webmock:
+    github: manastech/webmock.cr
+    version: ~> 0.13.0

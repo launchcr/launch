@@ -13,6 +13,8 @@ CURRENT_DIR       = Dir.current
 
 Launch.settings.redis_url = ENV["REDIS_URL"] if ENV["REDIS_URL"]?
 
+require "webmock"
+WebMock.allow_net_connect = true
 require "http"
 require "spec"
 require "../src/launch"

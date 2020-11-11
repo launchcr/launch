@@ -18,7 +18,7 @@ module Launch::Environment
     getter database_user : String = ""
     getter database_password : String = ""
     getter database_adapter : String = "sqlite3"
-    getter database_name : String = "#{ENV["LAUNCH_ENV"]}_example_database"
+    getter database_name : String = "#{Launch.env.to_s}_example_database"
     getter migration_file_path : String = "db/migrations"
 
     getter redis_url : String = "redis://localhost:6379"
@@ -32,6 +32,8 @@ module Launch::Environment
     property process_count : Int32 = 1
     property logging : Logging::OptionsType = Logging::DEFAULTS
     property auto_reload : Bool = true
+    property serverless : Bool = false
+    property serverless_provider : Symbol?
     property session : Hash(String, Int32 | String) = {
       "key"     => "launch.session",
       "store"   => "signed_cookie",
