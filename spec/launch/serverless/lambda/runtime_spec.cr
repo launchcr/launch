@@ -1,5 +1,4 @@
 require "../../../spec_helper"
-require "webmock"
 
 def mock_next_invocation(body : String)
   WebMock.stub(:get, "http://localhost/2018-06-01/runtime/invocation/next")
@@ -10,7 +9,7 @@ module Launch::Serverless::Lambda
   describe Runtime do
     io = IO::Memory.new
 
-    Spec.before_each do
+    before_each do
       WebMock.reset
       ENV["AWS_LAMBDA_RUNTIME_API"] = "localhost:80"
       ENV["_HANDLER"] = "my_handler"
