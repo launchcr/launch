@@ -23,11 +23,12 @@ module Launch::CLI
 
     property database : String = "sqlite"
     property language : String = "ecr"
-    property model : String = "granite" # TODO?
+    property model : String = "jennifer"
     property recipe : (String | Nil) = nil
     property recipe_source : (String | Nil) = nil
     property watch : WatchOptions
     property minimal : Bool = false
+    property mode : String = "full"
 
     def initialize
       @watch = default_watch_options
@@ -36,10 +37,11 @@ module Launch::CLI
     YAML.mapping(
       database: {type: String, default: "sqlite"},
       language: {type: String, default: "ecr"},
-      model: {type: String, default: "granite"}, # TODO?
+      model: {type: String, default: "jennifer"},
       recipe: String | Nil,
       recipe_source: String | Nil,
-      watch: {type: WatchOptions, default: default_watch_options}
+      watch: {type: WatchOptions, default: default_watch_options},
+      mode: {type: String, default: "full"}
     )
 
     def default_watch_options

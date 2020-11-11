@@ -1,12 +1,10 @@
 require "./environment/env"
-require "./environment/loader"
 require "./environment/logging"
 require "./environment/settings"
 
 module Launch::Environment
   macro included
     @@settings : Settings?
-    Loader.new.load_dotenv_files # Ensure .env files are loaded
 
     def self.settings : Settings
       @@settings ||= Settings.new

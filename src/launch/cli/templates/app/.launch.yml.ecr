@@ -2,6 +2,7 @@ type: app
 database: <%= @adapter_name %>
 language: <%= @language %>
 model: <%= @model %>
+mode: <%= @minimal ? "minimal" : "fullstack" %>
 
 # list of tasks to be run by `launch watch`
 watch:

@@ -2,16 +2,79 @@ module CLIFixtures
   def expected_animal_controller
     <<-CONT
     class AnimalController < ApplicationController
-      def add
-        render("add.ecr")
+      def index
+        animals = Animal.all.to_a
+        respond_with 200 do
+          json animals.to_json
+        end
       end
-
-      def list
-        render("list.ecr")
+    
+      def show
+        if animal = Animal.find params["id"]
+          respond_with 200 do
+            json animal.to_json
+          end
+        else
+          results = {status: "not found"}
+          respond_with 404 do
+            json results.to_json
+          end
+        end
       end
-
-      def remove
-        render("remove.ecr")
+    
+      def create
+        animal = Animal.new(animal_params.validate!)
+    
+        if animal.valid? && animal.save
+          respond_with 201 do
+            json animal.to_json
+          end
+        else
+          results = {status: "invalid"}
+          respond_with 422 do
+            json results.to_json
+          end
+        end
+      end
+    
+      def update
+        if animal = Animal.find(params["id"])
+          animal.set_attributes(animal_params.validate!)
+          if animal.valid? && animal.save
+            respond_with 200 do
+              json animal.to_json
+            end
+          else
+            results = {status: "invalid"}
+            respond_with 422 do
+              json results.to_json
+            end
+          end
+        else
+          results = {status: "not found"}
+          respond_with 404 do
+            json results.to_json
+          end
+        end
+      end
+    
+      def destroy
+        if animal = Animal.find params["id"]
+          animal.destroy
+          respond_with 204 do
+            json ""
+          end
+        else
+          results = {status: "not found"}
+          respond_with 404 do
+            json results.to_json
+          end
+        end
+      end
+    
+      def animal_params
+        params.validation do
+        end
       end
     end
 

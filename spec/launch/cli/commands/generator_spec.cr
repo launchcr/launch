@@ -17,19 +17,15 @@ module Launch::CLI
 
     it "generates controller with correct verbs and actions" do
       scaffold_app(TESTING_APP)
-      options = %w(add:post list:get remove:delete)
-      MainCommand.run %w(generate controller -y animal) | options
+      # options = %w(add:post list:get remove:delete)
+      MainCommand.run %w(generate controller -y animal)
       route_file = File.read("./config/routes.cr")
 
       # generates controller with correct verbs and actions"
       generated_controller = "./src/controllers/animal_controller.cr"
       File.read(generated_controller).should eq expected_animal_controller
 
-      options.each do |route|
-        action, method = route.split(":")
-        # "creates a valid #{method} route for #{action}"
-        route_file.includes?(build_route("animal", action, method)).should be_true
-      end
+      route_file.includes?("resources \"/animals\", AnimalController, except: [:new, :edit]").should be_true
 
       # "follows naming conventions for all files and class names"
       [camel_case, snake_case].each do |arg|

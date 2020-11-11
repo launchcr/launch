@@ -20,8 +20,10 @@ require "./launch/pipes/**"
 require "./launch/server/**"
 require "./launch/validators/**"
 require "./launch/websockets/**"
+require "./launch/environment/loader"
 require "./launch/environment"
 
 module Launch
   include Launch::Environment
+  Loader.new.load_dotenv_files # Ensure .env files are loaded
 end
