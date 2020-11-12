@@ -22,8 +22,8 @@ module Launch::CLI
         uninstall_plugin?
         ensure_name_argument!
 
-        if Launch::Plugins::Plugin.can_generate?(args.name)
-          template = Launch::Plugins::Plugin.new(args.name, "./src/plugins")
+        if Launch::CLI::Plugins::Plugin.can_generate?(args.name)
+          template = Launch::CLI::Plugins::Plugin.new(args.name, "./src/plugins")
           template.generate (options.uninstall? ? "uninstall" : "install")
         end
       end

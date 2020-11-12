@@ -1,13 +1,50 @@
-require "./cluster"
-require "./ssl"
+require "openssl"
 
 module Launch
   class Server
+    class Cluster
+      @@env_hash : Hash(String, String)?
+
+      def self.env_hash
+        @@env_hash ||= begin
+          env = ENV.to_h
+          env["FORKED"] = "1"
+          env["LAUNCH_ENV"] = Launch.env.to_s
+          env
+        end
+      end
+
+      def self.fork
+        Process.fork { Process.run(PROGRAM_NAME, nil, env_hash, true, false, input: Process::Redirect::Inherit, output: Process::Redirect::Inherit, error: Process::Redirect::Inherit) }
+      end
+
+      def self.master?
+        (ENV["FORKED"]? || "0") == "0"
+      end
+
+      def self.worker?
+        (ENV["FORKED"]? || "0") == "1"
+      end
+    end
+
+    class SSL
+      def initialize(@key_file : String, @cert_file : String)
+      end
+
+      def generate_tls
+        tls = OpenSSL::SSL::Context::Server.new
+        tls.private_key = @key_file
+        tls.certificate_chain = @cert_file
+        tls
+      end
+    end
+
     include Launch::DSL::Server
+    # :nodoc:
     alias WebSocketAdapter = WebSockets::Adapters::RedisAdapter.class | WebSockets::Adapters::MemoryAdapter.class
     property pubsub_adapter : WebSocketAdapter = WebSockets::Adapters::MemoryAdapter
     getter handler = Pipe::Pipeline.new
-    getter router = Amber::Router::Router.new
+    getter router = Launch::Router::Router.new
     getter time = Time.local
 
     def self.instance

@@ -1,4 +1,4 @@
-module Launch::Plugins
+module Launch::CLI::Plugins
   class Fetcher
     Log = ::Log.for(self)
 

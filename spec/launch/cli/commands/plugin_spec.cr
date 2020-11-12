@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Launch::Plugins
+module Launch::CLI::Plugins
   describe Plugin do
     describe "#can_generate?" do
       Spec.before_each do

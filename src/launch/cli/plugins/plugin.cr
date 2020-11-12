@@ -10,7 +10,7 @@ require "./fetcher"
 require "./installer"
 require "./settings"
 
-module Launch::Plugins
+module Launch::CLI::Plugins
   class Plugin
     Log = ::Log.for(self)
     getter name : String

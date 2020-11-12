@@ -5,7 +5,7 @@ module Launch::DSL
     end
   end
 
-  record Router, router : Amber::Router::Router, valve : Symbol, scope : Launch::Router::Scope do
+  record Router, router : Launch::Router::Router, valve : Symbol, scope : Launch::Router::Scope do
     RESOURCES = [:get, :post, :put, :patch, :delete, :options, :head, :trace, :connect]
 
     macro route(verb, resource, controller, action, constraints = {} of String => Regex)
@@ -18,7 +18,7 @@ module Launch::DSL
         end
       }
       %verb = {{verb.upcase.id.stringify}}
-      %route = Launch::Route.new(
+      %route = Launch::Router::Route.new(
         %verb, {{resource}}, %handler, {{action}}, valve, scope, "{{controller.id}}", {{constraints}}
       )
 

@@ -2,7 +2,7 @@ require "amber_router"
 require "./scope"
 
 # :nodoc:
-module Amber
+module Launch
   module Router
     # This is the main application handler all routers should finally hit this handler.
     class Router
@@ -10,8 +10,8 @@ module Amber
       property :routes, :routes_hash, :socket_routes, :scope
 
       def initialize
-        @routes = RouteSet(Launch::Route).new
-        @routes_hash = {} of String => Launch::Route
+        @routes = Amber::Router::RouteSet(Launch::Router::Route).new
+        @routes_hash = {} of String => Launch::Router::Route
         @socket_routes = Array(NamedTuple(path: String, handler: Launch::WebSockets::Server::Handler)).new
         @scope = Launch::Router::Scope.new
       end
@@ -35,7 +35,7 @@ module Amber
         scope.pop
       end
 
-      def add(route : Launch::Route)
+      def add(route : Launch::Router::Route)
         build_node(route.verb, route.resource)
         @routes.add(route.trail, route, route.constraints)
         @routes_hash["#{route.controller.downcase}##{route.action.to_s.downcase}"] = route
@@ -61,7 +61,7 @@ module Amber
         @routes_hash["#{controller}##{action}"]
       end
 
-      def match(http_verb, resource) : RoutedResult(Launch::Route)
+      def match(http_verb, resource) : Amber::Router::RoutedResult(Launch::Router::Route)
         if has_content_ext(resource)
           result = @routes.find build_node(http_verb, resource.sub(PATH_EXT_REGEX, ""))
           return result if result.found?

@@ -1,6 +1,6 @@
 require "./scope"
 
-module Launch
+module Launch::Router
   struct Route
     property :handler, :action, :verb, :resource, :valve, :params, :scope, :controller, :constraints
 
@@ -9,7 +9,7 @@ module Launch
                    @handler : HTTP::Server::Context ->,
                    @action : Symbol = :index,
                    @valve : Symbol = :web,
-                   @scope : Router::Scope = Router::Scope.new,
+                   @scope : Launch::Router::Scope = Launch::Router::Scope.new,
                    @controller : String = "",
                    @constraints : Hash = {} of String => Regex)
     end

@@ -3,6 +3,7 @@
 require "dexter"
 require "./*"
 
+# :nodoc:
 class Object
   def blank?
     if self.responds_to?(:empty?)

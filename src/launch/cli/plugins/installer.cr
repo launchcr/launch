@@ -1,4 +1,4 @@
-module Launch::Plugins
+module Launch::CLI::Plugins
   class Installer < Teeplate::FileTree
     include Launch::CLI::Helpers
     include Launch::Recipes::FileEntries

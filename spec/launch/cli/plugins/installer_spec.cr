@@ -3,7 +3,7 @@ require "../../../support/helpers/cli_helper"
 
 include CLIHelper
 
-module Launch::Plugins
+module Launch::CLI::Plugins
   describe Installer do
     Spec.after_each do
       cleanup
