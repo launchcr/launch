@@ -8,7 +8,7 @@ module CLIFixtures
           json animals.to_json
         end
       end
-    
+
       def show
         if animal = Animal.find params["id"]
           respond_with 200 do
@@ -21,10 +21,10 @@ module CLIFixtures
           end
         end
       end
-    
+
       def create
         animal = Animal.new(animal_params.validate!)
-    
+
         if animal.valid? && animal.save
           respond_with 201 do
             json animal.to_json
@@ -36,7 +36,7 @@ module CLIFixtures
           end
         end
       end
-    
+
       def update
         if animal = Animal.find(params["id"])
           animal.set_attributes(animal_params.validate!)
@@ -57,7 +57,7 @@ module CLIFixtures
           end
         end
       end
-    
+
       def destroy
         if animal = Animal.find params["id"]
           animal.destroy
@@ -71,7 +71,7 @@ module CLIFixtures
           end
         end
       end
-    
+
       def animal_params
         params.validation do
         end
@@ -96,7 +96,7 @@ module CLIFixtures
           t.timestamp :updated_at
         end
       end
-    
+
       def down
         drop_table(:posts)
       end
@@ -120,9 +120,9 @@ module CLIFixtures
     <<-MODEL
     class Post < Jennifer::Model::Base
       include JSON::Serializable
-    
+
       def initialize; end
-    
+
       with_timestamps
       mapping(
         id: Primary32,
@@ -133,7 +133,7 @@ module CLIFixtures
         created_at: {type: Time?},
         updated_at: {type: Time?}
       )
-    
+
       belongs_to :user
     end
 
