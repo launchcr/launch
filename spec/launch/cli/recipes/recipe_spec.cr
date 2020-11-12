@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Launch::Recipes
+module Launch::CLI::Recipes
   describe Recipe do
     recipe = "mydefault"
 

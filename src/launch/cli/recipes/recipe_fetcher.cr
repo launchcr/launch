@@ -5,7 +5,7 @@ require "http/client"
   require "zip"
 {% end %}
 
-module Launch::Recipes
+module Launch::CLI::Recipes
   class RecipeFetcher
     Log = ::Log.for(self)
 

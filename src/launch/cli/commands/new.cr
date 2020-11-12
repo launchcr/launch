@@ -41,7 +41,7 @@ module Launch::CLI
         # TODO: Add verification for options.d (database)
         # Can only be pg, postgres, mysql, sqlite or sqlite3
         if (options.r? != nil)
-          generator = Launch::Recipes::Recipe.new(name, full_path_name, "#{options.r}")
+          generator = Launch::CLI::Recipes::Recipe.new(name, full_path_name, "#{options.r}")
         else
           generator = Generators.new(name, full_path_name)
         end

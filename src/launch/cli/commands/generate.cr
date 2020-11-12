@@ -25,8 +25,8 @@ module Launch::CLI
         CLI.toggle_colors(options.no_color?)
         ensure_name_argument!
 
-        if recipe && Launch::Recipes::Recipe.can_generate?(args.type, recipe)
-          generator = Launch::Recipes::Recipe.new(args.name, ".", recipe.as(String), args.fields)
+        if recipe && Launch::CLI::Recipes::Recipe.can_generate?(args.type, recipe)
+          generator = Launch::CLI::Recipes::Recipe.new(args.name, ".", recipe.as(String), args.fields)
         else
           generator = Generators.new(args.name, ".", args.fields)
         end

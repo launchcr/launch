@@ -1,4 +1,4 @@
-module Launch::Recipes
+module Launch::CLI::Recipes
   class App < Teeplate::FileTree
     include FileEntries
 

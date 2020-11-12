@@ -1,7 +1,7 @@
 require "file_utils"
 require "../generators/field.cr"
 
-module Launch::Recipes
+module Launch::CLI::Recipes
   class Controller < Teeplate::FileTree
     include Launch::CLI::Helpers
     include FileEntries

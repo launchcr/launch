@@ -14,7 +14,7 @@ require "./model"
 require "./scaffold/controller"
 require "./scaffold/view"
 
-module Launch::Recipes
+module Launch::CLI::Recipes
   class Recipe
     Log = ::Log.for(self)
     getter name : String

@@ -1,6 +1,6 @@
 require "../../../spec_helper"
 
-module Launch::Recipes
+module Launch::CLI::Recipes
   describe RecipeFetcher do
     context "using a local folder" do
       Spec.before_each do

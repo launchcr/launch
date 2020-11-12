@@ -4,18 +4,18 @@ module Launch::Controller
   module Callbacks
     macro included
       include Launch::DSL::Callbacks
-       property filters : Filters = Filters.new
-       #TODO: Find a way to make these protected again.
-       def run_before_filter(action)
+      property filters : Filters = Filters.new
+      #TODO: Find a way to make these protected again.
+      def run_before_filter(action)
         if self.responds_to? :before_filters
           self.before_filters
           @filters.run(:before, :all)
           @filters.run(:before, :except, action)
           @filters.run(:before, action)
-        end
+        end 
       end
 
-       def run_after_filter(action)
+      def run_after_filter(action)
         if self.responds_to? :after_filters
           self.after_filters
           @filters.run(:after, action)

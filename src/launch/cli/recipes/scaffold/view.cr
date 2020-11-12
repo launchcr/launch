@@ -1,6 +1,6 @@
 require "../../generators/field.cr"
 
-module Launch::Recipes::Scaffold
+module Launch::CLI::Recipes::Scaffold
   class View < Teeplate::FileTree
     include Launch::CLI::Helpers
     include FileEntries

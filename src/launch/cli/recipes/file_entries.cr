@@ -1,6 +1,6 @@
 require "teeplate"
 
-module Launch::Recipes
+module Launch::CLI::Recipes
   module FileEntries
     Log = ::Log.for(self)
 

@@ -1,7 +1,7 @@
 module Launch::CLI::Plugins
   class Installer < Teeplate::FileTree
     include Launch::CLI::Helpers
-    include Launch::Recipes::FileEntries
+    include Launch::CLI::Recipes::FileEntries
 
     property template : String?
 
